@@ -39,6 +39,12 @@ button:disabled {
     width: 80%;
 }
 
+.shop-icon {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated; /* Keeps pixel art crisp */
+}
+
 a {
     color: blue;
 }

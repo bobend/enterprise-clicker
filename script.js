@@ -4,10 +4,18 @@ var gameState = {
     cash: 0,
     lifetimeEarnings: 0,
     jobLevel: 0,
-    upgrades: {} // id: count
+    upgrades: {}, // id: count
+    stockOptions: 0,
+    metaUpgrades: {} // id: count
 };
 
 // Configuration
+var metaUpgradeList = [
+    { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "+10% Passive Income per level.", icon: "images/chart.ico" },
+    { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Click power +20% per level.", icon: "images/moneybag.ico" },
+    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Start with $1000 extra cash per level after reset.", icon: "images/handshake.ico" }
+];
+
 var jobs = [
     { title: "Intern", baseRate: 0, clickPower: 1, promoteCost: 100 },
     { title: "Mailroom Clerk", baseRate: 1, clickPower: 2, promoteCost: 500 },
@@ -18,12 +26,12 @@ var jobs = [
 ];
 
 var upgradeList = [
-    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "Keeps papers together. +$0.50/sec" },
-    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "Caffeine boost. +$2.00/sec" },
-    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Does the grunt work. +$5.00/sec" },
-    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Communication speed. +$10.00/sec" },
-    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "High tech efficiency. +$40.00/sec" },
-    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec" }
+    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "Keeps papers together. +$0.50/sec", icon: "images/stapler.ico" },
+    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "Caffeine boost. +$2.00/sec", icon: "images/coffee.ico" },
+    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Does the grunt work. +$5.00/sec", icon: "images/intern.ico" },
+    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Communication speed. +$10.00/sec", icon: "images/fax.ico" },
+    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "High tech efficiency. +$40.00/sec", icon: "images/computer.ico" },
+    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec", icon: "images/mainframe.ico" }
 ];
 
 // Loop variables
@@ -34,6 +42,7 @@ function startGame() {
     console.log("Starting Enterprise Clicker...");
     loadGame();
     initShop();
+    initMetaShop();
     updateDisplay();
     gameLoop = setInterval(gameTick, tickRate);
 }
@@ -60,7 +69,15 @@ function getPassiveIncome() {
         }
     }
 
-    return jobIncome + upgradeIncome;
+    var total = jobIncome + upgradeIncome;
+
+    // Insider Trading Bonus
+    var insiderLevel = gameState.metaUpgrades["insider_trading"] || 0;
+    if (insiderLevel > 0) {
+        total *= (1 + (insiderLevel * 0.10));
+    }
+
+    return total;
 }
 
 function addCash(amount) {
@@ -71,6 +88,13 @@ function addCash(amount) {
 
 function work() {
     var clickPower = jobs[gameState.jobLevel].clickPower;
+
+    // Golden Parachute Bonus
+    var parachuteLevel = gameState.metaUpgrades["golden_parachute"] || 0;
+    if (parachuteLevel > 0) {
+        clickPower *= (1 + (parachuteLevel * 0.20));
+    }
+
     addCash(clickPower);
     logMessage("You did work. Earned $" + clickPower.toFixed(2));
 }
@@ -88,11 +112,14 @@ function initShop() {
         var currentCost = Math.floor(u.cost * Math.pow(1.15, count));
 
         cell.innerHTML = `
-            <div style="border: 1px outset white; background: #c0c0c0; padding: 5px; margin-bottom: 5px;">
-                <b>${u.name}</b> (${count})<br>
-                <small>${u.desc}</small><br>
-                Cost: $${currentCost}<br>
-                <button onclick="buyUpgrade('${u.id}')">Buy</button>
+            <div style="border: 1px outset white; background: #c0c0c0; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
+                <img src="${u.icon}" class="shop-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px;">
+                <div>
+                    <b>${u.name}</b> (${count})<br>
+                    <small>${u.desc}</small><br>
+                    Cost: $${currentCost}<br>
+                    <button onclick="buyUpgrade('${u.id}')">Buy</button>
+                </div>
             </div>
         `;
     }
@@ -111,6 +138,50 @@ function buyUpgrade(id) {
         updateDisplay();
     } else {
         logMessage("Not enough cash!");
+    }
+}
+
+function initMetaShop() {
+    var table = document.getElementById("meta-shop-table");
+    if (!table) return;
+    table.innerHTML = "";
+
+    for (var i = 0; i < metaUpgradeList.length; i++) {
+        var u = metaUpgradeList[i];
+        var row = table.insertRow(-1);
+        var cell = row.insertCell(0);
+
+        var count = gameState.metaUpgrades[u.id] || 0;
+        var currentCost = Math.floor(u.cost * Math.pow(u.costScaling, count));
+
+        cell.innerHTML = `
+            <div style="border: 1px outset gold; background: #000000; color: gold; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
+                 <img src="${u.icon}" class="shop-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px; border: 1px solid gold;">
+                 <div>
+                    <b>${u.name}</b> (Lvl ${count})<br>
+                    <small style="color: #ffffaa;">${u.desc}</small><br>
+                    Cost: ${currentCost} Stocks<br>
+                    <button onclick="buyMetaUpgrade('${u.id}')" style="background: gold; color: black; border-color: #886600;">Invest</button>
+                 </div>
+            </div>
+        `;
+    }
+}
+
+function buyMetaUpgrade(id) {
+    var u = metaUpgradeList.find(x => x.id === id);
+    var count = gameState.metaUpgrades[id] || 0;
+    var currentCost = Math.floor(u.cost * Math.pow(u.costScaling, count));
+
+    if (gameState.stockOptions >= currentCost) {
+        gameState.stockOptions -= currentCost;
+        gameState.metaUpgrades[id] = count + 1;
+        logMessage("Acquired Asset: " + u.name);
+        initMetaShop();
+        updateDisplay();
+        saveGame();
+    } else {
+        logMessage("Insufficient Stock Options!");
     }
 }
 
@@ -138,6 +209,53 @@ function updateDisplay() {
     } else {
         promoteBtn.disabled = true;
     }
+
+    // Update Ascension UI
+    var pendingStock = calculateStockOptions();
+    var retireBtn = document.getElementById('retire-btn');
+    if (retireBtn) {
+        retireBtn.title = "Retire now to earn " + pendingStock + " Stock Options";
+        document.getElementById('stock-display').textContent = gameState.stockOptions;
+        document.getElementById('pending-stock-display').textContent = pendingStock;
+    }
+}
+
+function calculateStockOptions() {
+    // Formula: 1 stock option for every $1000 earned, square root scaling?
+    // Let's go simple: floor(sqrt(lifetimeEarnings / 500))
+    if (gameState.lifetimeEarnings < 500) return 0;
+    return Math.floor(Math.sqrt(gameState.lifetimeEarnings / 500));
+}
+
+function ascend() {
+    var pending = calculateStockOptions();
+    if (pending === 0) {
+        logMessage("You need to earn more before retiring!");
+        return;
+    }
+
+    if (!confirm("Retire? You will lose all cash and upgrades, but gain " + pending + " Stock Options.")) {
+        return;
+    }
+
+    // Add stock options
+    gameState.stockOptions += pending;
+
+    // Reset Run State
+    gameState.cash = 0;
+    gameState.lifetimeEarnings = 0;
+    gameState.jobLevel = 0;
+    gameState.upgrades = {};
+
+    // Apply Nepotism Bonus immediately on reset
+    var nepotismLevel = gameState.metaUpgrades["nepotism"] || 0;
+    if (nepotismLevel > 0) {
+        gameState.cash = nepotismLevel * 1000;
+        logMessage("Nepotism bonus: Started with $" + gameState.cash);
+    }
+
+    saveGame();
+    location.reload();
 }
 
 function promote() {
@@ -176,10 +294,14 @@ function loadGame() {
                 var savedState = JSON.parse(saveString);
 
                 // Merge save with default to ensure new fields are added if updated
-                gameState.cash = savedState.cash || 0;
-                gameState.lifetimeEarnings = savedState.lifetimeEarnings || 0;
-                gameState.jobLevel = savedState.jobLevel || 0;
+                gameState.cash = (typeof savedState.cash !== 'undefined') ? savedState.cash : 0;
+                gameState.lifetimeEarnings = (typeof savedState.lifetimeEarnings !== 'undefined') ? savedState.lifetimeEarnings : 0;
+                gameState.jobLevel = (typeof savedState.jobLevel !== 'undefined') ? savedState.jobLevel : 0;
                 gameState.upgrades = savedState.upgrades || {};
+
+                // Meta progression fields
+                gameState.stockOptions = (typeof savedState.stockOptions !== 'undefined') ? savedState.stockOptions : 0;
+                gameState.metaUpgrades = savedState.metaUpgrades || {};
 
                 logMessage("Welcome back. Game loaded.");
             } catch (e) {

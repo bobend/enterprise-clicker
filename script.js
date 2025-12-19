@@ -23,8 +23,8 @@ var metaUpgradeList = [
     { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "+10% Passive Income per level.", icon: "images/chart.ico" },
     { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Click power +20% per level.", icon: "images/moneybag.ico" },
     { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Start with $1000 extra cash per level after reset.", icon: "images/handshake.ico" },
-    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Unlocks 1 additional Upgrade in shop (wip). For now: +50% All Income.", icon: "images/handshake.ico" },
-    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Capitalize on nothingness. Passive Income x2.", icon: "images/moneybag.ico" }
+    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Unlocks 1 additional Upgrade in shop (wip). For now: +50% All Income.", icon: "images/ink.svg" },
+    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Capitalize on nothingness. Passive Income x2.", icon: "images/void.svg" }
 ];
 
 var jobs = [
@@ -51,8 +51,8 @@ var upgradeList = [
     { id: "algorithm", name: "HFT Algorithm", cost: 100000, rate: 500, desc: "Microsecond trading. +$500.00/sec", icon: "images/chart.ico" },
     { id: "ai_manager", name: "AI Manager", cost: 500000, rate: 2500, desc: "Optimizes workflow. +$2,500.00/sec", icon: "images/computer.ico" },
     { id: "neural_link", name: "Neural Link", cost: 2500000, rate: 10000, desc: "Direct brain interface. +$10,000.00/sec", icon: "images/mainframe.ico" },
-    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Contracts are binding. +$50,000.00/sec", icon: "images/handshake.ico" },
-    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Automated extraction. +$250,000.00/sec", icon: "images/intern.ico" }
+    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Contracts are binding. +$50,000.00/sec", icon: "images/ink.svg" },
+    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Automated extraction. +$250,000.00/sec", icon: "images/skull.svg" }
 ];
 
 // Loop variables

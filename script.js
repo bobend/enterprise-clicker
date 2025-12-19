@@ -45,6 +45,47 @@ function startGame() {
     initMetaShop();
     updateDisplay();
     gameLoop = setInterval(gameTick, tickRate);
+    setInterval(spawnFloatingIcon, 1500); // Spawn an icon every 1.5 seconds
+}
+
+function spawnFloatingIcon() {
+    var ownedUpgrades = [];
+    for (var id in gameState.upgrades) {
+        if (gameState.upgrades[id] > 0) {
+            ownedUpgrades.push(id);
+        }
+    }
+
+    if (ownedUpgrades.length === 0) return;
+
+    var randomId = ownedUpgrades[Math.floor(Math.random() * ownedUpgrades.length)];
+    var upgrade = upgradeList.find(function(u) { return u.id === randomId; });
+
+    if (!upgrade) return;
+
+    var icon = document.createElement("img");
+    icon.src = upgrade.icon;
+    icon.className = "floating-icon";
+
+    // Randomize position and animation properties
+    var leftPos = Math.random() * 95; // 0% to 95%
+    var duration = 10 + Math.random() * 10; // 10s to 20s
+    var delay = Math.random() * 5; // 0s to 5s delay
+
+    icon.style.left = leftPos + "%";
+    icon.style.animationDuration = duration + "s";
+
+    var container = document.getElementById("background-fx");
+    if (container) {
+        container.appendChild(icon);
+
+        // Remove after animation completes + buffer
+        setTimeout(function() {
+            if (icon.parentNode) {
+                icon.parentNode.removeChild(icon);
+            }
+        }, duration * 1000 + 1000);
+    }
 }
 
 function gameTick() {
@@ -84,6 +125,16 @@ function addCash(amount) {
     gameState.cash += amount;
     gameState.lifetimeEarnings += amount;
     updateDisplay();
+
+    // Trigger pulse animation
+    var display = document.getElementById("cash-display");
+    if (display) {
+        // Remove class if it exists to reset animation
+        display.classList.remove("currency-increase");
+        // Force reflow
+        void display.offsetWidth;
+        display.classList.add("currency-increase");
+    }
 }
 
 function work() {
@@ -196,6 +247,7 @@ function logMessage(msg) {
 function updateDisplay() {
     document.getElementById('cash-display').textContent = "$" + gameState.cash.toFixed(2);
     document.getElementById('lifetime-display').textContent = "$" + gameState.lifetimeEarnings.toFixed(2);
+    document.getElementById('passive-display').textContent = "$" + getPassiveIncome().toFixed(2);
     document.getElementById('job-title').textContent = jobs[gameState.jobLevel].title;
 
     var nextPromote = jobs[gameState.jobLevel].promoteCost;

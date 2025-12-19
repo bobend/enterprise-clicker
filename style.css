@@ -1,0 +1,65 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #c0c0c0;
+    margin: 0;
+    padding: 10px;
+}
+
+button {
+    background-color: #d4d0c8;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+    color: black;
+    font-family: 'MS Sans Serif', 'Arial', sans-serif;
+    cursor: pointer;
+}
+
+button:active {
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    padding: 2px 0 0 2px; /* Shift text slightly */
+}
+
+button:disabled {
+    color: #808080;
+    cursor: default;
+}
+
+.box-bevel {
+    border-top: 2px solid #404040;
+    border-left: 2px solid #404040;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    background-color: #c0c0c0;
+    padding: 10px;
+    width: 80%;
+}
+
+a {
+    color: blue;
+}
+a:visited {
+    color: purple;
+}
+
+h1, h2, h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Scrollbar styling for webkit (Chrome/Safari) to mimic Windows 95 if possible,
+   though standard scrollbars are fine for 90s aesthetic */
+::-webkit-scrollbar {
+    width: 16px;
+}
+::-webkit-scrollbar-track {
+    background: #dfdfdf;
+}
+::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+    border: 2px outset #ffffff;
+}

@@ -18,12 +18,12 @@ var jobs = [
 ];
 
 var upgradeList = [
-    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "Keeps papers together. +$0.50/sec" },
-    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "Caffeine boost. +$2.00/sec" },
-    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Does the grunt work. +$5.00/sec" },
-    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Communication speed. +$10.00/sec" },
-    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "High tech efficiency. +$40.00/sec" },
-    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec" }
+    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "Keeps papers together. +$0.50/sec", icon: "images/stapler.ico" },
+    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "Caffeine boost. +$2.00/sec", icon: "images/coffee.ico" },
+    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Does the grunt work. +$5.00/sec", icon: "images/intern.ico" },
+    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Communication speed. +$10.00/sec", icon: "images/fax.ico" },
+    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "High tech efficiency. +$40.00/sec", icon: "images/computer.ico" },
+    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec", icon: "images/mainframe.ico" }
 ];
 
 // Loop variables
@@ -88,11 +88,14 @@ function initShop() {
         var currentCost = Math.floor(u.cost * Math.pow(1.15, count));
 
         cell.innerHTML = `
-            <div style="border: 1px outset white; background: #c0c0c0; padding: 5px; margin-bottom: 5px;">
-                <b>${u.name}</b> (${count})<br>
-                <small>${u.desc}</small><br>
-                Cost: $${currentCost}<br>
-                <button onclick="buyUpgrade('${u.id}')">Buy</button>
+            <div style="border: 1px outset white; background: #c0c0c0; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
+                <img src="${u.icon}" class="shop-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px;">
+                <div>
+                    <b>${u.name}</b> (${count})<br>
+                    <small>${u.desc}</small><br>
+                    Cost: $${currentCost}<br>
+                    <button onclick="buyUpgrade('${u.id}')">Buy</button>
+                </div>
             </div>
         `;
     }

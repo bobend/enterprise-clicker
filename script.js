@@ -6,14 +6,25 @@ var gameState = {
     jobLevel: 0,
     upgrades: {}, // id: count
     stockOptions: 0,
-    metaUpgrades: {} // id: count
+    metaUpgrades: {}, // id: count
+    sideProjects: {} // id: progress
 };
 
 // Configuration
+var projectList = [
+    { id: "synergy_summit", name: "Synergy Summit", cost: 1000, goal: 100, desc: "Coordinate business efforts. Reward: +5% Passive Income.", rewardType: "passive_mult", rewardValue: 0.05 },
+    { id: "rebranding", name: "Rebranding Campaign", cost: 5000, goal: 250, desc: "New logo, same great taste. Reward: +10% Click Power.", rewardType: "click_mult", rewardValue: 0.10 },
+    { id: "offshore_accounts", name: "Offshore Accounts", cost: 25000, goal: 500, desc: "Hide assets. Reward: +10% Passive Income.", rewardType: "passive_mult", rewardValue: 0.10 },
+    { id: "hostile_takeover", name: "Hostile Takeover", cost: 100000, goal: 1000, desc: "Acquire competition. Reward: +20% Passive Income.", rewardType: "passive_mult", rewardValue: 0.20 },
+    { id: "occult_ritual", name: "Occult Ritual", cost: 666666, goal: 666, desc: "Sacrifice for power. Reward: +66% Click Power.", rewardType: "click_mult", rewardValue: 0.66 }
+];
+
 var metaUpgradeList = [
     { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "+10% Passive Income per level.", icon: "images/chart.ico" },
     { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Click power +20% per level.", icon: "images/moneybag.ico" },
-    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Start with $1000 extra cash per level after reset.", icon: "images/handshake.ico" }
+    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Start with $1000 extra cash per level after reset.", icon: "images/handshake.ico" },
+    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Unlocks 1 additional Upgrade in shop (wip). For now: +50% All Income.", icon: "images/handshake.ico" },
+    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Capitalize on nothingness. Passive Income x2.", icon: "images/moneybag.ico" }
 ];
 
 var jobs = [
@@ -22,7 +33,12 @@ var jobs = [
     { title: "Junior Associate", baseRate: 5, clickPower: 5, promoteCost: 2000 },
     { title: "Middle Manager", baseRate: 20, clickPower: 15, promoteCost: 10000 },
     { title: "Senior VP", baseRate: 100, clickPower: 50, promoteCost: 50000 },
-    { title: "CEO", baseRate: 500, clickPower: 200, promoteCost: Infinity }
+    { title: "CEO", baseRate: 500, clickPower: 200, promoteCost: 250000 },
+    { title: "Board Member", baseRate: 2000, clickPower: 1000, promoteCost: 1000000 },
+    { title: "Chairman", baseRate: 10000, clickPower: 5000, promoteCost: 5000000 },
+    { title: "Shadow Director", baseRate: 50000, clickPower: 25000, promoteCost: 25000000 },
+    { title: "Grand Architect", baseRate: 200000, clickPower: 100000, promoteCost: 100000000 },
+    { title: "Elder God Avatar", baseRate: 1000000, clickPower: 500000, promoteCost: Infinity }
 ];
 
 var upgradeList = [
@@ -31,7 +47,12 @@ var upgradeList = [
     { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Does the grunt work. +$5.00/sec", icon: "images/intern.ico" },
     { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Communication speed. +$10.00/sec", icon: "images/fax.ico" },
     { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "High tech efficiency. +$40.00/sec", icon: "images/computer.ico" },
-    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec", icon: "images/mainframe.ico" }
+    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec", icon: "images/mainframe.ico" },
+    { id: "algorithm", name: "HFT Algorithm", cost: 100000, rate: 500, desc: "Microsecond trading. +$500.00/sec", icon: "images/chart.ico" },
+    { id: "ai_manager", name: "AI Manager", cost: 500000, rate: 2500, desc: "Optimizes workflow. +$2,500.00/sec", icon: "images/computer.ico" },
+    { id: "neural_link", name: "Neural Link", cost: 2500000, rate: 10000, desc: "Direct brain interface. +$10,000.00/sec", icon: "images/mainframe.ico" },
+    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Contracts are binding. +$50,000.00/sec", icon: "images/handshake.ico" },
+    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Automated extraction. +$250,000.00/sec", icon: "images/intern.ico" }
 ];
 
 // Loop variables
@@ -43,9 +64,11 @@ function startGame() {
     loadGame();
     initShop();
     initMetaShop();
+    initProjects();
     updateDisplay();
     gameLoop = setInterval(gameTick, tickRate);
     setInterval(spawnFloatingIcon, 1500); // Spawn an icon every 1.5 seconds
+    setInterval(updateTicker, 10000); // Update ticker every 10 seconds
 }
 
 function spawnFloatingIcon() {
@@ -118,6 +141,27 @@ function getPassiveIncome() {
         total *= (1 + (insiderLevel * 0.10));
     }
 
+    // Blood Pact Bonus
+    var bloodLevel = gameState.metaUpgrades["blood_pact"] || 0;
+    if (bloodLevel > 0) {
+        total *= (1 + (bloodLevel * 0.50));
+    }
+
+    // Void Investment Bonus
+    var voidLevel = gameState.metaUpgrades["void_investment"] || 0;
+    if (voidLevel > 0) {
+        total *= Math.pow(2, voidLevel);
+    }
+
+    // Side Project Bonuses
+    for (var i = 0; i < projectList.length; i++) {
+        var p = projectList[i];
+        var progress = gameState.sideProjects[p.id] || 0;
+        if (progress >= p.goal && p.rewardType === "passive_mult") {
+             total *= (1 + p.rewardValue);
+        }
+    }
+
     return total;
 }
 
@@ -137,6 +181,48 @@ function addCash(amount) {
     }
 }
 
+function updateTicker() {
+    var ticker = document.getElementById("game-ticker");
+    if (!ticker) return;
+
+    var msgs = [];
+    var stocks = gameState.stockOptions;
+
+    // Normal messages
+    if (stocks < 50) {
+        msgs = [
+            "*** WELCOME TO THE CORPORATION *** WORK HARD *** GET PROMOTED *** SYNERGIZE ***",
+            "*** REMINDER: CASUAL FRIDAYS ARE CANCELLED UNTIL PROFITS IMPROVE ***",
+            "*** THE PRINTER IS JAMMED AGAIN ***",
+            "*** PRODUCTIVITY IS UP 0.5% ***",
+            "*** PLEASE DO NOT FEED THE INTERNS ***"
+        ];
+    } else if (stocks < 1000) {
+        msgs = [
+            "*** PROFITS SOARING *** INVEST IN FUTURES ***",
+            "*** THE BOARD IS WATCHING ***",
+            "*** SHADOW ASSETS LIQUIDATED ***",
+            "*** REMEMBER: YOU ARE REPLACEABLE, BUT YOUR VALUE IS NOT ***",
+            "*** SYNERGY LEVELS CRITICAL ***"
+        ];
+    } else {
+        msgs = [
+            "*** THE VOID STARES BACK ***",
+            "*** CONSUME *** CONSUME *** CONSUME ***",
+            "*** REALITY IS AN ASSET CLASS ***",
+            "*** TIME IS MONEY *** MONEY IS BLOOD ***",
+            "*** WE ARE ETERNAL ***"
+        ];
+    }
+
+    // Add some dynamic ones
+    if (gameState.cash > 1000000) msgs.push("*** YOU ARE RICH ***");
+    if (gameState.jobLevel >= 5) msgs.push("*** LEADERSHIP MATERIAL ***");
+
+    var randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+    ticker.innerHTML = "<b>" + randomMsg + "</b>";
+}
+
 function work() {
     var clickPower = jobs[gameState.jobLevel].clickPower;
 
@@ -144,6 +230,15 @@ function work() {
     var parachuteLevel = gameState.metaUpgrades["golden_parachute"] || 0;
     if (parachuteLevel > 0) {
         clickPower *= (1 + (parachuteLevel * 0.20));
+    }
+
+    // Side Project Bonuses
+    for (var i = 0; i < projectList.length; i++) {
+        var p = projectList[i];
+        var progress = gameState.sideProjects[p.id] || 0;
+        if (progress >= p.goal && p.rewardType === "click_mult") {
+             clickPower *= (1 + p.rewardValue);
+        }
     }
 
     addCash(clickPower);
@@ -236,6 +331,74 @@ function buyMetaUpgrade(id) {
     }
 }
 
+function initProjects() {
+    var container = document.getElementById("project-list-container");
+    if (!container) return; // Should exist if HTML is updated
+    container.innerHTML = "";
+
+    for (var i = 0; i < projectList.length; i++) {
+        var p = projectList[i];
+        var progress = gameState.sideProjects[p.id] || 0;
+        var isComplete = progress >= p.goal;
+
+        var pct = Math.min(100, Math.floor((progress / p.goal) * 100));
+        var statusText = isComplete ? "COMPLETED" : pct + "%";
+        var buttonDisabled = isComplete ? "disabled" : "";
+        var buttonText = isComplete ? "Done" : "Fund ($" + p.cost + ")";
+
+        // Simple HTML progress bar
+        var barColor = isComplete ? "#008000" : "#000080";
+        var barHTML = `
+            <div style="width: 100%; background-color: white; border: 1px inset gray; height: 16px; position: relative;">
+                <div style="width: ${pct}%; background-color: ${barColor}; height: 100%; position: absolute; top: 0; left: 0;"></div>
+                <div style="position: absolute; top: 0; left: 0; width: 100%; text-align: center; color: ${pct > 50 ? 'white' : 'black'}; font-size: 10px; line-height: 16px;">
+                    ${statusText}
+                </div>
+            </div>
+        `;
+
+        var div = document.createElement("div");
+        div.style.marginBottom = "10px";
+        div.style.padding = "5px";
+        div.style.border = "1px outset white";
+        div.style.backgroundColor = "#c0c0c0";
+
+        div.innerHTML = `
+            <b>${p.name}</b><br>
+            <small>${p.desc}</small><br>
+            ${barHTML}
+            <div style="margin-top: 5px; text-align: right;">
+                <button onclick="contributeProject('${p.id}')" ${buttonDisabled} style="font-size: 10px;">${buttonText}</button>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+}
+
+function contributeProject(id) {
+    var p = projectList.find(x => x.id === id);
+    if (!p) return;
+
+    var progress = gameState.sideProjects[id] || 0;
+    if (progress >= p.goal) return;
+
+    if (gameState.cash >= p.cost) {
+        gameState.cash -= p.cost;
+        gameState.sideProjects[id] = progress + 1;
+        logMessage("Funded project: " + p.name);
+
+        if (gameState.sideProjects[id] >= p.goal) {
+            logMessage("PROJECT COMPLETE: " + p.name);
+            updateDisplay(); // Recalculate bonuses immediately
+        }
+
+        initProjects(); // Refresh UI
+        updateDisplay(); // Refresh cash display
+    } else {
+        logMessage("Not enough cash to fund project.");
+    }
+}
+
 function logMessage(msg) {
     var log = document.getElementById("message-log");
     var entry = document.createElement("div");
@@ -270,6 +433,23 @@ function updateDisplay() {
         document.getElementById('stock-display').textContent = gameState.stockOptions;
         document.getElementById('pending-stock-display').textContent = pendingStock;
     }
+
+    updateTheme();
+}
+
+function updateTheme() {
+    var stocks = gameState.stockOptions;
+    var body = document.body;
+
+    // Reset classes
+    body.classList.remove("theme-unsettling");
+    body.classList.remove("theme-eldritch");
+
+    if (stocks >= 1000) {
+        body.classList.add("theme-eldritch");
+    } else if (stocks >= 50) {
+        body.classList.add("theme-unsettling");
+    }
 }
 
 function calculateStockOptions() {
@@ -298,6 +478,14 @@ function ascend() {
     gameState.lifetimeEarnings = 0;
     gameState.jobLevel = 0;
     gameState.upgrades = {};
+    // Note: sideProjects persist across runs like metaUpgrades? Or do they reset?
+    // Request says "Add multiple new side projects... on the higher accessions."
+    // Usually side projects in these games might reset. But given the high costs and goals, let's keep them persistent OR reset them.
+    // "Customize the ticket... depended on the game progress."
+    // Let's assume Side Projects are run-specific but provide powerful bonuses.
+    // If they are persistent, they would be meta-upgrades.
+    // So let's reset them.
+    gameState.sideProjects = {};
 
     // Apply Nepotism Bonus immediately on reset
     var nepotismLevel = gameState.metaUpgrades["nepotism"] || 0;
@@ -354,6 +542,7 @@ function loadGame() {
                 // Meta progression fields
                 gameState.stockOptions = (typeof savedState.stockOptions !== 'undefined') ? savedState.stockOptions : 0;
                 gameState.metaUpgrades = savedState.metaUpgrades || {};
+                gameState.sideProjects = savedState.sideProjects || {};
 
                 logMessage("Welcome back. Game loaded.");
             } catch (e) {
@@ -371,6 +560,52 @@ function resetGame() {
         // Expire the cookie
         document.cookie = "enterpriseSave=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         location.reload();
+    }
+}
+
+function toggleSaveMenu() {
+    var menu = document.getElementById("save-menu");
+    if (menu.style.display === "none") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
+
+function exportSave() {
+    // Generate base64 encoded save string to make it look "techy" and prevent accidental edits
+    var saveString = JSON.stringify(gameState);
+    var encoded = btoa(saveString);
+    document.getElementById("export-area").value = encoded;
+    document.getElementById("export-area").select();
+    document.execCommand("copy");
+    logMessage("Save data copied to clipboard.");
+}
+
+function importSave() {
+    var encoded = document.getElementById("import-area").value;
+    if (!encoded) return;
+
+    try {
+        var decoded = atob(encoded);
+        var newState = JSON.parse(decoded);
+
+        // Basic validation
+        if (typeof newState.cash === 'undefined') throw new Error("Invalid save format");
+
+        if (confirm("Overwrite current progress with imported data?")) {
+            gameState = newState;
+            // Re-merge with defaults in case of version mismatch
+            gameState.upgrades = gameState.upgrades || {};
+            gameState.metaUpgrades = gameState.metaUpgrades || {};
+            gameState.sideProjects = gameState.sideProjects || {};
+
+            saveGame();
+            location.reload();
+        }
+    } catch (e) {
+        alert("Invalid Save Data!");
+        console.error(e);
     }
 }
 

@@ -14,7 +14,7 @@
         <tr>
             <td bgcolor="#000080" align="center">
                 <font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
-                    <marquee scrollamount="5" scrolldelay="100">
+                    <marquee id="game-ticker" scrollamount="5" scrolldelay="100">
                         <b>*** WELCOME TO THE CORPORATION *** WORK HARD *** GET PROMOTED *** SYNERGIZE ***</b>
                     </marquee>
                 </font>
@@ -22,6 +22,32 @@
         </tr>
     </table>
     <br>
+
+    <table border="0" width="800" cellspacing="0" cellpadding="5">
+        <tr>
+            <td align="right">
+                <button onclick="toggleSaveMenu()" style="font-size: 10px;">[Data Management]</button>
+            </td>
+        </tr>
+    </table>
+
+    <div id="save-menu" style="display: none; width: 800px; background-color: #d3d3d3; border: 2px outset white; padding: 10px; margin-bottom: 10px;">
+        <center><b>DATA I/O</b></center><br>
+        <table width="100%">
+            <tr>
+                <td width="50%" valign="top">
+                    <b>Export Save:</b><br>
+                    <textarea id="export-area" rows="5" style="width: 100%; font-family: monospace;" readonly></textarea>
+                    <button onclick="exportSave()">Generate Export Code</button>
+                </td>
+                <td width="50%" valign="top">
+                    <b>Import Save:</b><br>
+                    <textarea id="import-area" rows="5" style="width: 100%; font-family: monospace;"></textarea>
+                    <button onclick="importSave()">Import Save Data</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <table border="1" width="800" cellspacing="2" cellpadding="5" bgcolor="#c0c0c0" bordercolor="#ffffff">
         <tr>
@@ -74,6 +100,11 @@
                     </table>
                 </div>
 
+                <hr>
+                <center><b>SPECIAL PROJECTS</b></center>
+                <div id="project-list-container" style="padding: 5px;">
+                    <!-- JS fills this -->
+                </div>
                 <hr>
                 <div id="executive-lounge" style="background-color: #000000; color: gold; padding: 5px; border: 2px ridge gold;">
                     <center><b>*** EXECUTIVE LOUNGE ***</b></center>

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Enterprise Clicker: Rise to the Top</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="UTF-8">
 </head>
@@ -9,128 +10,121 @@
 
 <div id="background-fx"></div>
 
-<center>
-    <table border="0" width="800" cellspacing="0" cellpadding="0">
-        <tr>
-            <td bgcolor="#000080" align="center">
-                <font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
-                    <marquee id="game-ticker" scrollamount="5" scrolldelay="100">
-                        <b>*** WELCOME TO THE CORPORATION *** WORK HARD *** GET PROMOTED *** SYNERGIZE ***</b>
-                    </marquee>
-                </font>
-            </td>
-        </tr>
-    </table>
-    <br>
+<div class="main-container">
+    <center>
+        <div class="ticker-container">
+            <div style="background-color: #000080; text-align: center; color: white; font-family: Arial, Helvetica, sans-serif;">
+                <marquee id="game-ticker" scrollamount="5" scrolldelay="100">
+                    <b>*** WELCOME TO THE CORPORATION *** WORK HARD *** GET PROMOTED *** SYNERGIZE ***</b>
+                </marquee>
+            </div>
+        </div>
+        <br>
 
-    <table border="0" width="800" cellspacing="0" cellpadding="5">
-        <tr>
-            <td align="right">
-                <button onclick="toggleSaveMenu()" style="font-size: 10px;">[Data Management]</button>
-            </td>
-        </tr>
-    </table>
+        <div class="data-mgmt-bar">
+            <button onclick="toggleSaveMenu()" style="font-size: 10px;">[Data Management]</button>
+        </div>
 
-    <div id="save-menu" style="display: none; width: 800px; background-color: #d3d3d3; border: 2px outset white; padding: 10px; margin-bottom: 10px;">
-        <center><b>DATA I/O</b></center><br>
-        <table width="100%">
-            <tr>
-                <td width="50%" valign="top">
+        <div id="save-menu" style="display: none; width: 100%; max-width: 800px; background-color: #d3d3d3; border: 2px outset white; padding: 10px; margin-bottom: 10px; box-sizing: border-box;">
+            <center><b>DATA I/O</b></center><br>
+            <div class="save-menu-grid">
+                <div class="save-col">
                     <b>Export Save:</b><br>
                     <textarea id="export-area" rows="5" style="width: 100%; font-family: monospace;" readonly></textarea>
                     <button onclick="exportSave()">Generate Export Code</button>
-                </td>
-                <td width="50%" valign="top">
+                </div>
+                <div class="save-col">
                     <b>Import Save:</b><br>
                     <textarea id="import-area" rows="5" style="width: 100%; font-family: monospace;"></textarea>
                     <button onclick="importSave()">Import Save Data</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+                </div>
+            </div>
+        </div>
 
-    <table border="1" width="800" cellspacing="2" cellpadding="5" bgcolor="#c0c0c0" bordercolor="#ffffff">
-        <tr>
-            <td colspan="2" align="center" bgcolor="#008080">
+        <div class="game-board">
+            <div class="game-header">
                 <font color="#FFFFFF" face="Times New Roman, Times, serif" size="5"><b>Enterprise Clicker</b></font>
-            </td>
-        </tr>
-        <tr>
-            <!-- LEFT COLUMN: WORK AND STATS -->
-            <td width="50%" valign="top">
-                <table border="0" width="100%">
-                    <tr>
-                        <td align="center">
-                            <br>
-                            <div class="box-bevel">
-                                <h2 id="job-title">Intern</h2>
-                                <p>Cash: <span id="cash-display">$0.00</span></p>
-                                <p>Lifetime Earnings: <span id="lifetime-display">$0.00</span></p>
-                                <p>Passive Income: <span id="passive-display">$0.00</span>/sec</p>
-                            </div>
-                            <br>
-                            <button id="work-btn" onclick="work()" style="width: 200px; height: 100px; font-weight: bold; font-size: 16px;">
-                                DO WORK
-                            </button>
-                            <br><br>
-                            <div id="message-log" style="height: 100px; overflow-y: scroll; background-color: white; border: 2px inset gray; text-align: left; padding: 5px; font-family: 'Courier New', Courier, monospace; font-size: 12px;">
-                                System initialized...<br>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </td>
+            </div>
 
-            <!-- RIGHT COLUMN: UPGRADES AND PROMOTIONS -->
-            <td width="50%" valign="top" bgcolor="#d3d3d3">
-                <font face="Arial, Helvetica, sans-serif" size="2">
-                <center><b>CORPORATE LADDER & SUPPLIES</b></center>
-                <hr>
-
-                <div id="promotion-section">
-                     <p>Next Promotion: <span id="next-promotion-cost">???</span></p>
-                     <button id="promote-btn" onclick="promote()" disabled>ASK FOR PROMOTION</button>
-                </div>
-                <hr>
-
-                <div id="shop-section">
-                    <!-- Upgrades will be injected here by JS -->
-                    <table width="100%" id="shop-table" border="0">
-                        <!-- JS fills this -->
-                    </table>
-                </div>
-
-                <hr>
-                <center><b>SPECIAL PROJECTS</b></center>
-                <div id="project-list-container" style="padding: 5px;">
-                    <!-- JS fills this -->
-                </div>
-                <hr>
-                <div id="executive-lounge" style="background-color: #000000; color: gold; padding: 5px; border: 2px ridge gold;">
-                    <center><b>*** EXECUTIVE LOUNGE ***</b></center>
-                    <p>Stock Options: <span id="stock-display">0</span> (Pending: <span id="pending-stock-display">0</span>)</p>
-                    <button id="retire-btn" onclick="ascend()" style="width: 100%; background-color: gold; color: black; font-weight: bold;">RETIRE & ASCEND</button>
-                    <br><br>
-                    <div id="meta-shop-section">
-                         <table width="100%" id="meta-shop-table" border="0">
-                            <!-- JS fills this -->
-                         </table>
+            <div class="game-columns">
+                <!-- LEFT COLUMN: WORK AND STATS -->
+                <div class="column-left">
+                    <div align="center">
+                        <br>
+                        <div class="box-bevel">
+                            <h2 id="job-title">Intern</h2>
+                            <p>Cash: <span id="cash-display">$0.00</span></p>
+                            <p>Lifetime Earnings: <span id="lifetime-display">$0.00</span></p>
+                            <p>Passive Income: <span id="passive-display">$0.00</span>/sec</p>
+                        </div>
+                        <br>
+                        <button id="work-btn" onclick="work()" style="width: 200px; height: 100px; font-weight: bold; font-size: 16px;">
+                            DO WORK
+                        </button>
+                        <br><br>
+                        <div id="message-log" style="height: 100px; overflow-y: scroll; background-color: white; border: 2px inset gray; text-align: left; padding: 5px; font-family: 'Courier New', Courier, monospace; font-size: 12px;">
+                            System initialized...<br>
+                        </div>
                     </div>
                 </div>
-                </font>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="center" style="font-size: 10px; font-family: Arial;">
+
+                <!-- RIGHT COLUMN: UPGRADES AND PROMOTIONS -->
+                <div class="column-right">
+                    <font face="Arial, Helvetica, sans-serif" size="2">
+                    <center><b>CORPORATE LADDER & SUPPLIES</b></center>
+                    <hr>
+
+                    <div id="promotion-section">
+                         <p>Next Promotion: <span id="next-promotion-cost">???</span></p>
+                         <button id="promote-btn" onclick="promote()" disabled>ASK FOR PROMOTION</button>
+                    </div>
+                    <hr>
+
+                    <div id="shop-controls" style="text-align: center; margin-bottom: 5px;">
+                        <!-- JS injects multipliers here -->
+                    </div>
+
+                    <div id="shop-section">
+                        <!-- Upgrades will be injected here by JS -->
+                        <table width="100%" id="shop-table" border="0">
+                            <!-- JS fills this -->
+                        </table>
+                    </div>
+
+                    <hr>
+                    <center><b>SPECIAL PROJECTS</b></center>
+                    <div id="project-list-container" style="padding: 5px;">
+                        <!-- JS fills this -->
+                    </div>
+                    <hr>
+                    <div id="executive-lounge" style="background-color: #000000; color: gold; padding: 5px; border: 2px ridge gold;">
+                        <center><b>*** EXECUTIVE LOUNGE ***</b></center>
+                        <p>Stock Options: <span id="stock-display">0</span> (Pending: <span id="pending-stock-display">0</span>)</p>
+                        <button id="retire-btn" onclick="ascend()" style="width: 100%; background-color: gold; color: black; font-weight: bold;">RETIRE & ASCEND</button>
+                        <br><br>
+                        <div id="meta-shop-section">
+                             <table width="100%" id="meta-shop-table" border="0">
+                                <!-- JS fills this -->
+                             </table>
+                        </div>
+                    </div>
+                    </font>
+                </div>
+            </div>
+
+            <div class="game-footer">
                 <hr>
-                &copy; 1999 The Corporation. All rights reserved. <br>
-                Best viewed with Netscape Navigator 4.0 at 800x600 resolution.
-                <br>
-                <button onclick="resetGame()">Reset Career</button>
-            </td>
-        </tr>
-    </table>
-</center>
+                <div style="font-size: 10px; font-family: Arial;">
+                    &copy; 1999 The Corporation. All rights reserved. <br>
+                    Best viewed with Netscape Navigator 4.0 (or a mobile device).
+                    <br>
+                    <button onclick="resetGame()">Reset Career</button>
+                    <span id="audio-controls-placeholder"></span>
+                </div>
+            </div>
+        </div>
+    </center>
+</div>
 
 <script src="script.js"></script>
 </body>

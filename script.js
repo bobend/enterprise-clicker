@@ -173,6 +173,7 @@ function addCash(amount) {
     gameState.lifetimeEarnings += amount;
     updateDisplay();
     updateShopVisibility();
+    updateProjectVisibility();
 
     // Trigger pulse animation
     var display = document.getElementById("cash-display");
@@ -463,6 +464,7 @@ function initProjects() {
         div.style.padding = "5px";
         div.style.border = "1px outset white";
         div.style.backgroundColor = "#c0c0c0";
+        div.id = "project-row-" + p.id;
 
         div.innerHTML = `
             <b>${p.name}</b><br>
@@ -473,6 +475,37 @@ function initProjects() {
             </div>
         `;
         container.appendChild(div);
+    }
+    updateProjectVisibility();
+}
+
+function updateProjectVisibility() {
+    var nextFound = false;
+
+    for (var i = 0; i < projectList.length; i++) {
+        var p = projectList[i];
+        var row = document.getElementById("project-row-" + p.id);
+        if (!row) continue;
+
+        var progress = gameState.sideProjects[p.id] || 0;
+        var isStarted = progress > 0;
+        var canAfford = gameState.cash >= p.cost; // Base cost check for visibility
+
+        var shouldShow = false;
+
+        if (isStarted) {
+            shouldShow = true;
+        } else if (canAfford) {
+            shouldShow = true;
+        } else if (!nextFound) {
+            // First unstarted, unaffordable project
+            shouldShow = true;
+            nextFound = true;
+        } else {
+            shouldShow = false;
+        }
+
+        row.style.display = shouldShow ? "" : "none";
     }
 }
 

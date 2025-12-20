@@ -268,6 +268,7 @@ function setMultiplier(m) {
     buyMultiplier = m;
     initShopControls();
     initShop();
+    initProjects();
 }
 
 function getUpgradeCost(u, currentCount, amount) {
@@ -393,7 +394,12 @@ function initProjects() {
         var pct = Math.min(100, Math.floor((progress / p.goal) * 100));
         var statusText = isComplete ? "COMPLETED" : pct + "%";
         var buttonDisabled = isComplete ? "disabled" : "";
-        var buttonText = isComplete ? "Done" : "Fund ($" + p.cost + ")";
+
+        var amount = Math.min(buyMultiplier, p.goal - progress);
+        if (amount <= 0 && !isComplete) amount = 1; // Fallback
+
+        var currentCost = p.cost * amount;
+        var buttonText = isComplete ? "Done" : "Fund x" + amount + " ($" + currentCost.toLocaleString() + ")";
 
         // Simple HTML progress bar
         var barColor = isComplete ? "#008000" : "#000080";
@@ -431,11 +437,14 @@ function contributeProject(id) {
     var progress = gameState.sideProjects[id] || 0;
     if (progress >= p.goal) return;
 
-    if (gameState.cash >= p.cost) {
-        gameState.cash -= p.cost;
-        gameState.sideProjects[id] = progress + 1;
+    var amount = Math.min(buyMultiplier, p.goal - progress);
+    var totalCost = p.cost * amount;
+
+    if (gameState.cash >= totalCost) {
+        gameState.cash -= totalCost;
+        gameState.sideProjects[id] = progress + amount;
         soundManager.playClick();
-        logMessage("Funded project: " + p.name);
+        logMessage("Funded project: " + p.name + " (x" + amount + ")");
 
         if (gameState.sideProjects[id] >= p.goal) {
             logMessage("PROJECT COMPLETE: " + p.name);
@@ -499,6 +508,19 @@ var soundManager = {
             var AudioContext = window.AudioContext || window.webkitAudioContext;
             this.audioCtx = new AudioContext();
             this.renderControls();
+
+            // Auto-resume on first interaction
+            var _this = this;
+            var resumeFunc = function() {
+                if (_this.audioCtx && _this.audioCtx.state === 'suspended') {
+                    _this.audioCtx.resume();
+                }
+                document.removeEventListener('click', resumeFunc);
+                document.removeEventListener('keydown', resumeFunc);
+            };
+            document.addEventListener('click', resumeFunc);
+            document.addEventListener('keydown', resumeFunc);
+
         } catch (e) {
             console.error("Web Audio API not supported");
         }
@@ -528,6 +550,10 @@ var soundManager = {
     playClick: function() {
         if (this.isMuted || !this.audioCtx) return;
 
+        if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
+
         var osc = this.audioCtx.createOscillator();
         var gain = this.audioCtx.createGain();
 
@@ -548,6 +574,11 @@ var soundManager = {
 
     startMusic: function() {
         if (this.isMuted || !this.audioCtx) return;
+
+        if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
+
         if (this.musicInterval) clearInterval(this.musicInterval);
 
         // Music logic based on theme

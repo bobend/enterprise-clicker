@@ -10,7 +10,9 @@ Start your journey as a lowly Intern. Click the button. Do the work. Earn the cu
 
 *   **Career Progression:** Climb the ladder from Mailroom Clerk to CEO to [REDACTED].
 *   **Asset Management:** Acquire helpful tools like Coffee, Fax Machines, and Soul Harvesters.
-*   **Synergy:** Coordinate business efforts with Side Projects. Fund them. They are mandatory.
+*   **Stonk Market:** Invest in sinister and fictive stocks like Void Corp and Blood Bank. Volatility is guaranteed.
+*   **Micromanagement:** Middle Managers can now directly "motivate" employees. Monitor their stress and productivity levels.
+*   **Synergy:** Coordinate business efforts with Side Projects, including new AI Slop Generators with unforeseen reality-bending consequences.
 *   **Responsiveness:** Works on your desktop terminal and your pocket communicator.
 *   **Audio Enhancement:** Enjoy soothing corporate beats that definitely do not contain subliminal messages from the Void.
 

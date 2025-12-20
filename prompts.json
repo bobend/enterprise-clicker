@@ -27,13 +27,13 @@
         {"title": "Elder God Avatar", "desc": "Cosmic horror meets corporate. A colossal, dark pixelated eldritch entity (tentacles and many eyes) wearing a tattered business suit, looming over a tiny, burning pixelated Earth in space."}
     ],
     "upgrades": [
-        {"id": "stapler", "desc": "A bright red, blocky pixelated Swingline-style desktop stapler."},
+        {"id": "stapler", "desc": "A bright red, blocky pixelated office stapler."},
         {"id": "coffee", "desc": "A white Styrofoam cup with brown pixel liquid and steam rising, next to a coffee stain."},
         {"id": "intern", "desc": "A tired-looking pixelated young person face with messy hair and large bags under their eyes, holding a stack of papers."},
         {"id": "copier", "desc": "A beige, bulky pixelated fax machine with paper feeding into it and a phone handset attached."},
-        {"id": "computer", "desc": "A complete beige desktop computer setup: a CRT monitor displaying the Windows 95 cloud logo, a keyboard, and a mouse."},
+        {"id": "computer", "desc": "A complete beige desktop computer setup: a CRT monitor displaying a generic retro OS logo, a keyboard, and a mouse."},
         {"id": "server", "desc": "A tall, black server rack cabinet with blinking red and green pixel lights and tape reels spinning."},
-        {"id": "algorithm", "desc": "Streams of green binary pixel code falling like rain (Matrix style), forming a dollar sign shape in the center."},
+        {"id": "algorithm", "desc": "Streams of green binary pixel code falling vertically, forming a dollar sign shape in the center."},
         {"id": "ai_manager", "desc": "A robotic metallic pixel head wearing a business suit tie, with a single glowing red camera lens for an eye."},
         {"id": "neural_link", "desc": "A pink pixelated human brain with several thick grey wires and plugs jammed directly into it."},
         {"id": "blood_ink", "desc": "An old-fashioned glass inkwell pot glowing with deep red liquid, and a quill pen dipped into it."},

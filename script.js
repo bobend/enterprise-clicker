@@ -14,19 +14,21 @@ var buyMultiplier = 1;
 
 // Configuration
 var projectList = [
-    { id: "synergy_summit", name: "Synergy Summit", cost: 1000, goal: 100, desc: "Two blocky business-suited pixel hands shaking over a conference table. Reward: +5% Passive Income.", rewardType: "passive_mult", rewardValue: 0.05, icon: "images/project_synergy_summit.png" },
-    { id: "rebranding", name: "Rebranding Campaign", cost: 5000, goal: 250, desc: "Shiny, blocky yellow 'NEW' logo. Reward: +10% Click Power.", rewardType: "click_mult", rewardValue: 0.10, icon: "images/project_rebranding.png" },
-    { id: "offshore_accounts", name: "Offshore Accounts", cost: 25000, goal: 500, desc: "Tiny pixel treasure chest on a desert island. Reward: +10% Passive Income.", rewardType: "passive_mult", rewardValue: 0.10, icon: "images/project_offshore_accounts.png" },
-    { id: "hostile_takeover", name: "Hostile Takeover", cost: 100000, goal: 1000, desc: "Aggressive grey corporate building 'eating' a smaller one. Reward: +20% Passive Income.", rewardType: "passive_mult", rewardValue: 0.20, icon: "images/project_hostile_takeover.png" },
-    { id: "occult_ritual", name: "Occult Ritual", cost: 666666, goal: 666, desc: "Glowing red pentagram with lit candles. Reward: +66% Click Power.", rewardType: "click_mult", rewardValue: 0.66, icon: "images/project_occult_ritual.png" }
+    { id: "synergy_summit", name: "Synergy Summit", cost: 1000, goal: 100, desc: "Align key stakeholders. Reward: +5% Passive Income.", rewardType: "passive_mult", rewardValue: 0.05, icon: "images/project_synergy_summit.png" },
+    { id: "rebranding", name: "Rebranding Campaign", cost: 5000, goal: 250, desc: "New logo, same problems. Reward: +10% Click Power.", rewardType: "click_mult", rewardValue: 0.10, icon: "images/project_rebranding.png" },
+    { id: "offshore_accounts", name: "Offshore Accounts", cost: 25000, goal: 500, desc: "Tax optimization strategies. Reward: +10% Passive Income.", rewardType: "passive_mult", rewardValue: 0.10, icon: "images/project_offshore_accounts.png" },
+    { id: "hostile_takeover", name: "Hostile Takeover", cost: 100000, goal: 1000, desc: "Acquire the competition. Reward: +20% Passive Income.", rewardType: "passive_mult", rewardValue: 0.20, icon: "images/project_hostile_takeover.png" },
+    { id: "occult_ritual", name: "Occult Ritual", cost: 666666, goal: 666, desc: "Sacrifices must be made. Reward: +66% Click Power.", rewardType: "click_mult", rewardValue: 0.66, icon: "images/project_occult_ritual.png" },
+    { id: "ai_slop_generator", name: "Generative Text Engine", cost: 1000000, goal: 2000, desc: "Flood the internet with content. Reward: +50% Passive Income. Warning: Unforeseen side effects.", rewardType: "passive_mult", rewardValue: 0.50, icon: "images/project_ai_slop.png" },
+    { id: "image_hallucinator", name: "Image Hallucinator", cost: 5000000, goal: 5000, desc: "Generate infinite visuals. Reward: +100% Click Power. Warning: Reality stability decreases.", rewardType: "click_mult", rewardValue: 1.00, icon: "images/project_image_hallucinator.png" }
 ];
 
 var metaUpgradeList = [
-    { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "Unnatural vertical spike upward on a stock chart. +10% Passive Income per level.", icon: "images/meta_insider_trading.png" },
-    { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Golden money bag with a parachute. Click power +20% per level.", icon: "images/meta_golden_parachute.png" },
-    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Adult hand passing cash to a child's hand. Start with $1000 extra cash per level after reset.", icon: "images/meta_nepotism.png" },
-    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Ancient scroll signed with a bloody handprint. +50% All Income.", icon: "images/meta_blood_pact.png" },
-    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Dark purple vortex sucking in dollar signs. Passive Income x2.", icon: "images/meta_void_investment.png" }
+    { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "We know before they know. +10% Passive Income per level.", icon: "images/meta_insider_trading.png" },
+    { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Safety first. Click power +20% per level.", icon: "images/meta_golden_parachute.png" },
+    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "It's who you know. Start with $1000 extra cash per level after reset.", icon: "images/meta_nepotism.png" },
+    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Sign on the dotted line. +50% All Income.", icon: "images/meta_blood_pact.png" },
+    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Diversify into non-existence. Passive Income x2.", icon: "images/meta_void_investment.png" }
 ];
 
 var jobs = [
@@ -44,17 +46,17 @@ var jobs = [
 ];
 
 var upgradeList = [
-    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "A bright red, blocky pixelated stapler. +$0.50/sec", icon: "images/upgrade_stapler.png" },
-    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "White Styrofoam cup with brown liquid. +$2.00/sec", icon: "images/upgrade_coffee.png" },
-    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Tired-looking pixelated face. +$5.00/sec", icon: "images/upgrade_intern.png" },
-    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Beige, bulky pixelated fax machine. +$10.00/sec", icon: "images/upgrade_copier.png" },
-    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "Complete beige desktop computer setup. +$40.00/sec", icon: "images/upgrade_computer.png" },
-    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Tall, black server rack cabinet. +$100.00/sec", icon: "images/upgrade_server.png" },
-    { id: "algorithm", name: "HFT Algorithm", cost: 100000, rate: 500, desc: "Streams of green binary pixel code. +$500.00/sec", icon: "images/upgrade_algorithm.png" },
-    { id: "ai_manager", name: "AI Manager", cost: 500000, rate: 2500, desc: "Robotic metallic pixel head. +$2,500.00/sec", icon: "images/upgrade_ai_manager.png" },
-    { id: "neural_link", name: "Neural Link", cost: 2500000, rate: 10000, desc: "Pink pixelated human brain with wires. +$10,000.00/sec", icon: "images/upgrade_neural_link.png" },
-    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Old-fashioned glass inkwell with red liquid. +$50,000.00/sec", icon: "images/upgrade_blood_ink.png" },
-    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Grim reaper style mechanical scythe. +$250,000.00/sec", icon: "images/upgrade_soul_harvester.png" }
+    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "A robust fastening device. +$0.50/sec", icon: "images/upgrade_stapler.png" },
+    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "Fuel for the machine. +$2.00/sec", icon: "images/upgrade_coffee.png" },
+    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Eager to please, easy to replace. +$5.00/sec", icon: "images/upgrade_intern.png" },
+    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Transmit data over copper wires. +$10.00/sec", icon: "images/upgrade_copier.png" },
+    { id: "computer", name: "Office PC", cost: 5000, rate: 40, desc: "It runs Solitaire. +$40.00/sec", icon: "images/upgrade_computer.png" },
+    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Big iron for big data. +$100.00/sec", icon: "images/upgrade_server.png" },
+    { id: "algorithm", name: "HFT Algorithm", cost: 100000, rate: 500, desc: "Trading faster than light. +$500.00/sec", icon: "images/upgrade_algorithm.png" },
+    { id: "ai_manager", name: "AI Manager", cost: 500000, rate: 2500, desc: "Efficiency without empathy. +$2,500.00/sec", icon: "images/upgrade_ai_manager.png" },
+    { id: "neural_link", name: "Neural Link", cost: 2500000, rate: 10000, desc: "Direct cortex integration. +$10,000.00/sec", icon: "images/upgrade_neural_link.png" },
+    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Contracts that bind eternally. +$50,000.00/sec", icon: "images/upgrade_blood_ink.png" },
+    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Automated extraction. +$250,000.00/sec", icon: "images/upgrade_soul_harvester.png" }
 ];
 
 // Loop variables
@@ -68,10 +70,30 @@ function startGame() {
     initShop();
     initMetaShop();
     initProjects();
+    initMarket();
+    initMicromanagement();
     updateDisplay();
     gameLoop = setInterval(gameTick, tickRate);
     setInterval(spawnFloatingIcon, 1500); // Spawn an icon every 1.5 seconds
     setInterval(updateTicker, 10000); // Update ticker every 10 seconds
+}
+
+function formatNumber(num) {
+    if (num < 1000) return num.toFixed(2);
+
+    var suffixes = ["", "k", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc"];
+    var suffixNum = Math.floor(("" + Math.floor(num)).length / 3);
+
+    var shortValue = parseFloat((suffixNum !== 0 ? (num / Math.pow(1000, suffixNum)) : num).toPrecision(3));
+    if (shortValue % 1 !== 0) {
+        shortValue = shortValue.toFixed(2);
+    }
+
+    if (suffixNum < suffixes.length) {
+        return shortValue + suffixes[suffixNum];
+    }
+
+    return num.toExponential(2);
 }
 
 function spawnFloatingIcon() {
@@ -121,6 +143,10 @@ function gameTick() {
     if (passiveIncome > 0) {
         addCash(passiveIncome);
     }
+
+    updateMarket();
+    updateMicromanagement();
+    checkSideProjectConsequences();
 
     saveGame();
 }
@@ -255,12 +281,14 @@ function initShopControls() {
     var container = document.getElementById("shop-controls");
     if (!container) return;
 
-    var multipliers = [1, 10, 100];
+    var multipliers = [1, 10, 100, "MAX"];
     var html = "Buy Amount: ";
 
     multipliers.forEach(function(m) {
         var style = (m === buyMultiplier) ? "font-weight: bold; background-color: white;" : "";
-        html += `<button onclick="setMultiplier(${m})" style="${style}">x${m}</button> `;
+        var label = (m === "MAX") ? "MAX" : "x" + m;
+        var val = (m === "MAX") ? "'MAX'" : m;
+        html += `<button onclick="setMultiplier(${val})" style="${style}">${label}</button> `;
     });
 
     container.innerHTML = html;
@@ -274,25 +302,37 @@ function setMultiplier(m) {
 }
 
 function getUpgradeCost(u, currentCount, amount) {
-    // Geometric series sum: Base * r^k * (r^n - 1) / (r - 1)
-    // where r is 1.15
-    // But since the loop is cleaner for small N and prevents precision errors with formula,
-    // let's do a loop for now (max 100 iterations is trivial).
-    // Or optimized:
-    // First item cost: u.cost * 1.15^currentCount
-    // Sum = FirstCost * (1.15^amount - 1) / (1.15 - 1)
-
-    var firstCost = u.cost * Math.pow(1.15, currentCount);
     var r = 1.15;
+    var firstCost = u.cost * Math.pow(r, currentCount);
 
-    // Using formula for geometric series sum: S_n = a(1-r^n)/(1-r)
-    // Here we want sum of costs.
-    // Cost(i) = Base * 1.15^(current + i)
-    // Sum = Base * 1.15^current * (1 + 1.15 + ... + 1.15^(amount-1))
-    // Sum = Base * 1.15^current * ((1.15^amount - 1) / (1.15 - 1))
+    if (amount === "MAX") {
+        // Just return the cost of 1 for display purposes if needed,
+        // but actual buy logic handles max.
+        // For display in the list, we want to show cost of Max purchasable?
+        // Or just "N/A"? Let's calculate how many we can afford.
+        var maxAfford = calculateMaxAffordable(u, currentCount, gameState.cash);
+        if (maxAfford === 0) return firstCost; // Show next one cost
+
+        return firstCost * (Math.pow(r, maxAfford) - 1) / (r - 1);
+    }
 
     var total = firstCost * (Math.pow(r, amount) - 1) / (r - 1);
     return Math.floor(total);
+}
+
+function calculateMaxAffordable(u, currentCount, cash) {
+    var r = 1.15;
+    var firstCost = u.cost * Math.pow(r, currentCount);
+
+    if (cash < firstCost) return 0;
+
+    // Formula derived from Sum = First * (r^n - 1) / (r - 1)
+    // Cash * (r - 1) / First = r^n - 1
+    // (Cash * (r - 1) / First) + 1 = r^n
+    // n = log_r( ... )
+
+    var maxN = Math.floor(Math.log((cash * (r - 1) / firstCost) + 1) / Math.log(r));
+    return maxN;
 }
 
 function initShop() {
@@ -305,7 +345,19 @@ function initShop() {
         var cell = row.insertCell(0);
 
         var count = gameState.upgrades[u.id] || 0;
-        var cost = getUpgradeCost(u, count, buyMultiplier);
+
+        var displayAmount = buyMultiplier;
+        var cost = 0;
+
+        if (buyMultiplier === "MAX") {
+             var maxCanBuy = calculateMaxAffordable(u, count, gameState.cash);
+             displayAmount = maxCanBuy > 0 ? maxCanBuy : 1;
+             cost = getUpgradeCost(u, count, displayAmount); // if 0 can buy, shows cost of 1
+             // If maxCanBuy is 0, getUpgradeCost with 1 will return cost of next 1
+             if (maxCanBuy === 0) cost = getUpgradeCost(u, count, 1);
+        } else {
+            cost = getUpgradeCost(u, count, buyMultiplier);
+        }
 
         // Assign an ID to the row for filtering
         row.id = "upgrade-row-" + u.id;
@@ -318,8 +370,8 @@ function initShop() {
                     <small>${u.desc}</small>
                 </div>
                 <div class="upgrade-actions">
-                    <small>Cost: $${cost.toLocaleString()}</small>
-                    <button onclick="buyUpgrade('${u.id}')">Buy x${buyMultiplier}</button>
+                    <small>Cost: $${formatNumber(cost)}</small>
+                    <button onclick="buyUpgrade('${u.id}')">Buy ${buyMultiplier === 'MAX' ? 'x' + displayAmount : 'x' + buyMultiplier}</button>
                 </div>
             </div>
         `;
@@ -369,13 +421,26 @@ function updateShopVisibility() {
 function buyUpgrade(id) {
     var u = upgradeList.find(x => x.id === id);
     var count = gameState.upgrades[id] || 0;
-    var cost = getUpgradeCost(u, count, buyMultiplier);
+
+    var amountToBuy = buyMultiplier;
+    var cost = 0;
+
+    if (buyMultiplier === "MAX") {
+        amountToBuy = calculateMaxAffordable(u, count, gameState.cash);
+        if (amountToBuy === 0) {
+            logMessage("Not enough cash!");
+            return;
+        }
+        cost = getUpgradeCost(u, count, amountToBuy);
+    } else {
+        cost = getUpgradeCost(u, count, buyMultiplier);
+    }
 
     if (gameState.cash >= cost) {
         gameState.cash -= cost;
-        gameState.upgrades[id] = count + buyMultiplier;
+        gameState.upgrades[id] = count + amountToBuy;
         soundManager.playClick();
-        logMessage("Bought " + buyMultiplier + "x " + u.name);
+        logMessage("Bought " + amountToBuy + "x " + u.name);
         initShop(); // refresh prices
         updateDisplay();
     } else {
@@ -557,9 +622,9 @@ function logMessage(msg) {
 }
 
 function updateDisplay() {
-    document.getElementById('cash-display').textContent = "$" + gameState.cash.toFixed(2);
-    document.getElementById('lifetime-display').textContent = "$" + gameState.lifetimeEarnings.toFixed(2);
-    document.getElementById('passive-display').textContent = "$" + getPassiveIncome().toFixed(2);
+    document.getElementById('cash-display').textContent = "$" + formatNumber(gameState.cash);
+    document.getElementById('lifetime-display').textContent = "$" + formatNumber(gameState.lifetimeEarnings);
+    document.getElementById('passive-display').textContent = "$" + formatNumber(getPassiveIncome());
     var job = jobs[gameState.jobLevel];
     document.getElementById('job-title').textContent = job.title;
 
@@ -575,7 +640,7 @@ function updateDisplay() {
     }
 
     var nextPromote = job.promoteCost;
-    var promoText = (nextPromote === Infinity) ? "MAX LEVEL" : "$" + nextPromote;
+    var promoText = (nextPromote === Infinity) ? "MAX LEVEL" : "$" + formatNumber(nextPromote);
     document.getElementById('next-promotion-cost').textContent = promoText;
 
     // Update Promote Button
@@ -870,6 +935,7 @@ function loadGame() {
                 gameState.stockOptions = (typeof savedState.stockOptions !== 'undefined') ? savedState.stockOptions : 0;
                 gameState.metaUpgrades = savedState.metaUpgrades || {};
                 gameState.sideProjects = savedState.sideProjects || {};
+                gameState.stocksOwned = savedState.stocksOwned || {};
 
                 logMessage("Welcome back. Game loaded.");
             } catch (e) {
@@ -937,3 +1003,285 @@ function importSave() {
 }
 
 window.onload = startGame;
+
+// --- STONKS MARKET ---
+var stockMarket = [];
+var stockTickTimer = 0;
+var stockUpdateInterval = 5; // update every 5 ticks
+
+function initMarket() {
+    // Check if market already initialized (e.g. from save)
+    if (!gameState.stocksOwned) {
+        gameState.stocksOwned = {};
+    }
+
+    stockMarket = [
+        { symbol: "VOID", name: "Void Corp", price: 10.00, volatility: 0.15, trend: 0 },
+        { symbol: "BLUD", name: "Blood Bank", price: 25.00, volatility: 0.05, trend: 0.02 },
+        { symbol: "SYNR", name: "Synergy Ltd", price: 50.00, volatility: 0.08, trend: -0.01 },
+        { symbol: "SOUL", name: "Soul Systems", price: 100.00, volatility: 0.12, trend: 0 },
+        { symbol: "GLITCH", name: "Null Pointer", price: 5.00, volatility: 0.25, trend: 0.05 }
+    ];
+
+    // Initial render
+    updateMarketDisplay();
+}
+
+function updateMarket() {
+    stockTickTimer++;
+    if (stockTickTimer < stockUpdateInterval) return;
+    stockTickTimer = 0;
+
+    for (var i = 0; i < stockMarket.length; i++) {
+        var s = stockMarket[i];
+
+        // Random walk
+        var change = (Math.random() - 0.5) * s.volatility;
+        // Trend bias
+        change += s.trend;
+
+        // Update price
+        s.price = s.price * (1 + change);
+        if (s.price < 0.10) s.price = 0.10; // Floor
+
+        // Update trend occasionally
+        if (Math.random() < 0.05) {
+            s.trend = (Math.random() - 0.5) * 0.05;
+        }
+    }
+
+    updateMarketDisplay();
+}
+
+function updateMarketDisplay() {
+    var container = document.getElementById("stock-market-display");
+    if (!container) return;
+
+    var html = "";
+
+    for (var i = 0; i < stockMarket.length; i++) {
+        var s = stockMarket[i];
+        var owned = gameState.stocksOwned[s.symbol] || 0;
+
+        // Determine color based on trend/change (simplified here just by trend for now)
+        var trendClass = s.trend >= 0 ? "stock-up" : "stock-down";
+        var trendSymbol = s.trend >= 0 ? "▲" : "▼";
+
+        html += `
+            <div class="stock-ticker-row">
+                <div style="width: 30%;">
+                    <span class="stock-symbol">${s.symbol}</span><br>
+                    <span style="font-size:10px;">Owned: ${owned}</span>
+                </div>
+                <div style="width: 30%; text-align: right;" class="stock-price">
+                    $${s.price.toFixed(2)}
+                </div>
+                <div style="width: 40%; text-align: right;">
+                    <button onclick="buyStock('${s.symbol}')" style="font-size: 10px; padding: 1px 3px;">Buy</button>
+                    <button onclick="sellStock('${s.symbol}')" style="font-size: 10px; padding: 1px 3px;">Sell</button>
+                </div>
+            </div>
+        `;
+    }
+
+    container.innerHTML = html;
+}
+
+function buyStock(symbol) {
+    var s = stockMarket.find(x => x.symbol === symbol);
+    if (!s) return;
+
+    // Buy 1 or based on multiplier? simplified to 1 for now or 10 if shift click?
+    // Let's use global multiplier
+    var amount = (buyMultiplier === "MAX") ? 1 : buyMultiplier;
+    if (amount === "MAX") amount = 1; // Fallback for stocks
+
+    var cost = s.price * amount;
+
+    if (gameState.cash >= cost) {
+        gameState.cash -= cost;
+        gameState.stocksOwned[symbol] = (gameState.stocksOwned[symbol] || 0) + amount;
+        logMessage(`Bought ${amount} ${symbol} @ $${s.price.toFixed(2)}`);
+        updateDisplay();
+        updateMarketDisplay();
+    } else {
+        logMessage("Not enough cash for stocks.");
+    }
+}
+
+function sellStock(symbol) {
+    var s = stockMarket.find(x => x.symbol === symbol);
+    if (!s) return;
+
+    var owned = gameState.stocksOwned[symbol] || 0;
+    var amount = (buyMultiplier === "MAX") ? owned : buyMultiplier;
+
+    if (owned >= amount && amount > 0) {
+        var val = s.price * amount;
+        gameState.cash += val;
+        gameState.stocksOwned[symbol] -= amount;
+        logMessage(`Sold ${amount} ${symbol} @ $${s.price.toFixed(2)}`);
+        updateDisplay();
+        updateMarketDisplay();
+    } else {
+        logMessage("Not enough stocks to sell.");
+    }
+}
+
+// --- SIDE PROJECT CONSEQUENCES ---
+function checkSideProjectConsequences() {
+    // Check for AI Slop
+    var slopProgress = gameState.sideProjects["ai_slop_generator"] || 0;
+    var slopGoal = projectList.find(p => p.id === "ai_slop_generator").goal;
+
+    if (slopProgress >= slopGoal) {
+        if (Math.random() < 0.005) { // 0.5% chance per tick
+            triggerGlitch("text");
+        }
+    }
+
+    // Check for Image Hallucinator
+    var hallucinationProgress = gameState.sideProjects["image_hallucinator"] || 0;
+    var hallucinationGoal = projectList.find(p => p.id === "image_hallucinator").goal;
+
+    if (hallucinationProgress >= hallucinationGoal) {
+        if (Math.random() < 0.005) {
+            triggerGlitch("image");
+        }
+    }
+}
+
+function triggerGlitch(type) {
+    var body = document.body;
+
+    if (type === "text") {
+        var ticker = document.getElementById("game-ticker");
+        var originalText = ticker.innerHTML;
+
+        // Temporarily garble text
+        var chars = "¥§©®±¶$#@%&";
+        var garbled = "";
+        for (var i = 0; i < 20; i++) garbled += chars.charAt(Math.floor(Math.random() * chars.length));
+
+        ticker.innerHTML = `<b>*** ${garbled} ***</b>`;
+
+        setTimeout(function() {
+            if (ticker) ticker.innerHTML = originalText;
+        }, 2000);
+
+        logMessage("SYSTEM ALERT: Semantic drift detected.");
+    } else if (type === "image") {
+        // Invert colors briefly
+        var originalFilter = body.style.filter;
+        body.style.filter = "invert(100%) hue-rotate(180deg)";
+
+        setTimeout(function() {
+            body.style.filter = originalFilter;
+        }, 500); // 0.5s flash
+
+        logMessage("SYSTEM ALERT: Visual cortex buffer overflow.");
+    }
+}
+
+// --- MICROMANAGEMENT ---
+var employees = [];
+var microTickTimer = 0;
+
+function initMicromanagement() {
+    // Generate some dummy employees if not exists
+    // Ideally this would be persistent, but for now we generate fresh or from simple state if we wanted
+    // Let's keep it simple: reset on load or keep in memory if we add it to save.
+    // Since we didn't add it to save structure explicitly, we'll re-init.
+
+    employees = [
+        { id: 1, name: "Bob", role: "Intern", stress: 10, productivity: 50 },
+        { id: 2, name: "Alice", role: "Clerk", stress: 20, productivity: 60 },
+        { id: 3, name: "Dave", role: "Developer", stress: 30, productivity: 70 }
+    ];
+
+    updateMicromanagementUI();
+}
+
+function updateMicromanagement() {
+    // Only available if Middle Manager or higher (index 3)
+    if (gameState.jobLevel < 3) {
+        var container = document.getElementById("micromanagement-container");
+        if (container) container.style.display = "none";
+        return;
+    }
+
+    // Show container
+    var container = document.getElementById("micromanagement-container");
+    if (container && container.style.display === "none") {
+        container.style.display = "block";
+        logMessage("Micromanagement Module Unlocked.");
+    }
+
+    microTickTimer++;
+    if (microTickTimer < 2) return; // Update slower than tick
+    microTickTimer = 0;
+
+    // Passive changes
+    employees.forEach(e => {
+        // Stress goes up, productivity goes down over time
+        e.stress = Math.min(100, e.stress + 0.5);
+        if (e.stress > 80) {
+            e.productivity = Math.max(0, e.productivity - 1);
+        }
+    });
+
+    updateMicromanagementUI();
+}
+
+function updateMicromanagementUI() {
+    var list = document.getElementById("employee-list");
+    if (!list) return;
+
+    // Check visibility logic again just in case
+    if (gameState.jobLevel < 3) return;
+
+    var html = "";
+    employees.forEach(e => {
+        // Color coding
+        var stressColor = e.stress > 80 ? "red" : (e.stress > 50 ? "orange" : "green");
+
+        html += `
+            <div class="employee-card">
+                <div style="display: flex; justify-content: space-between;">
+                    <b>${e.name} (${e.role})</b>
+                    <button onclick="motivateEmployee(${e.id})" style="font-size: 9px;">Motivate</button>
+                </div>
+                <div style="font-size: 10px;">
+                    Stress: <span style="color:${stressColor}">${Math.floor(e.stress)}%</span>
+                    <div class="employee-stats-bar">
+                        <div class="employee-stats-fill" style="width: ${e.stress}%; background-color: ${stressColor};"></div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; margin-top: 2px;">
+                    Productivity: ${Math.floor(e.productivity)}%
+                    <div class="employee-stats-bar">
+                        <div class="employee-stats-fill" style="width: ${e.productivity}%; background-color: blue;"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    list.innerHTML = html;
+}
+
+function motivateEmployee(id) {
+    var e = employees.find(x => x.id === id);
+    if (!e) return;
+
+    // Motivate: Reduces stress, boosts productivity slightly
+    // Cost? Maybe free but has cooldown? Or costs cash?
+    // Let's make it cost a small amount of cash based on job level to keep it relevant?
+    // Or just simple clicker mechanic.
+
+    e.stress = Math.max(0, e.stress - 20);
+    e.productivity = Math.min(100, e.productivity + 10);
+
+    soundManager.playClick();
+    updateMicromanagementUI();
+}

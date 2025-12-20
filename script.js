@@ -10,6 +10,8 @@ var gameState = {
     sideProjects: {} // id: progress
 };
 
+var buyMultiplier = 1;
+
 // Configuration
 var projectList = [
     { id: "synergy_summit", name: "Synergy Summit", cost: 1000, goal: 100, desc: "Coordinate business efforts. Reward: +5% Passive Income.", rewardType: "passive_mult", rewardValue: 0.05 },
@@ -62,6 +64,7 @@ var gameLoop;
 function startGame() {
     console.log("Starting Enterprise Clicker...");
     loadGame();
+    initShopControls();
     initShop();
     initMetaShop();
     initProjects();
@@ -242,7 +245,51 @@ function work() {
     }
 
     addCash(clickPower);
+    soundManager.playClick();
     logMessage("You did work. Earned $" + clickPower.toFixed(2));
+}
+
+function initShopControls() {
+    var container = document.getElementById("shop-controls");
+    if (!container) return;
+
+    var multipliers = [1, 10, 100];
+    var html = "Buy Amount: ";
+
+    multipliers.forEach(function(m) {
+        var style = (m === buyMultiplier) ? "font-weight: bold; background-color: white;" : "";
+        html += `<button onclick="setMultiplier(${m})" style="${style}">x${m}</button> `;
+    });
+
+    container.innerHTML = html;
+}
+
+function setMultiplier(m) {
+    buyMultiplier = m;
+    initShopControls();
+    initShop();
+}
+
+function getUpgradeCost(u, currentCount, amount) {
+    // Geometric series sum: Base * r^k * (r^n - 1) / (r - 1)
+    // where r is 1.15
+    // But since the loop is cleaner for small N and prevents precision errors with formula,
+    // let's do a loop for now (max 100 iterations is trivial).
+    // Or optimized:
+    // First item cost: u.cost * 1.15^currentCount
+    // Sum = FirstCost * (1.15^amount - 1) / (1.15 - 1)
+
+    var firstCost = u.cost * Math.pow(1.15, currentCount);
+    var r = 1.15;
+
+    // Using formula for geometric series sum: S_n = a(1-r^n)/(1-r)
+    // Here we want sum of costs.
+    // Cost(i) = Base * 1.15^(current + i)
+    // Sum = Base * 1.15^current * (1 + 1.15 + ... + 1.15^(amount-1))
+    // Sum = Base * 1.15^current * ((1.15^amount - 1) / (1.15 - 1))
+
+    var total = firstCost * (Math.pow(r, amount) - 1) / (r - 1);
+    return Math.floor(total);
 }
 
 function initShop() {
@@ -255,7 +302,7 @@ function initShop() {
         var cell = row.insertCell(0);
 
         var count = gameState.upgrades[u.id] || 0;
-        var currentCost = Math.floor(u.cost * Math.pow(1.15, count));
+        var cost = getUpgradeCost(u, count, buyMultiplier);
 
         cell.innerHTML = `
             <div style="border: 1px outset white; background: #c0c0c0; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
@@ -263,8 +310,8 @@ function initShop() {
                 <div>
                     <b>${u.name}</b> (${count})<br>
                     <small>${u.desc}</small><br>
-                    Cost: $${currentCost}<br>
-                    <button onclick="buyUpgrade('${u.id}')">Buy</button>
+                    Buy x${buyMultiplier} Cost: $${cost.toLocaleString()}<br>
+                    <button onclick="buyUpgrade('${u.id}')">Buy x${buyMultiplier}</button>
                 </div>
             </div>
         `;
@@ -274,12 +321,13 @@ function initShop() {
 function buyUpgrade(id) {
     var u = upgradeList.find(x => x.id === id);
     var count = gameState.upgrades[id] || 0;
-    var cost = Math.floor(u.cost * Math.pow(1.15, count));
+    var cost = getUpgradeCost(u, count, buyMultiplier);
 
     if (gameState.cash >= cost) {
         gameState.cash -= cost;
-        gameState.upgrades[id] = count + 1;
-        logMessage("Bought " + u.name);
+        gameState.upgrades[id] = count + buyMultiplier;
+        soundManager.playClick();
+        logMessage("Bought " + buyMultiplier + "x " + u.name);
         initShop(); // refresh prices
         updateDisplay();
     } else {
@@ -322,6 +370,7 @@ function buyMetaUpgrade(id) {
     if (gameState.stockOptions >= currentCost) {
         gameState.stockOptions -= currentCost;
         gameState.metaUpgrades[id] = count + 1;
+        soundManager.playClick();
         logMessage("Acquired Asset: " + u.name);
         initMetaShop();
         updateDisplay();
@@ -385,6 +434,7 @@ function contributeProject(id) {
     if (gameState.cash >= p.cost) {
         gameState.cash -= p.cost;
         gameState.sideProjects[id] = progress + 1;
+        soundManager.playClick();
         logMessage("Funded project: " + p.name);
 
         if (gameState.sideProjects[id] >= p.goal) {
@@ -437,6 +487,140 @@ function updateDisplay() {
     updateTheme();
 }
 
+// Sound Manager
+var soundManager = {
+    audioCtx: null,
+    musicInterval: null,
+    isMuted: false,
+    currentTheme: "normal", // normal, unsettling, eldritch
+
+    init: function() {
+        try {
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.audioCtx = new AudioContext();
+            this.renderControls();
+        } catch (e) {
+            console.error("Web Audio API not supported");
+        }
+    },
+
+    toggleMute: function() {
+        this.isMuted = !this.isMuted;
+        if (this.isMuted) {
+            this.stopMusic();
+        } else {
+            if (this.audioCtx && this.audioCtx.state === 'suspended') {
+                this.audioCtx.resume();
+            }
+            this.startMusic();
+        }
+        this.renderControls();
+    },
+
+    renderControls: function() {
+        var container = document.getElementById("audio-controls-placeholder");
+        if (container) {
+            var text = this.isMuted ? "Enable Audio" : "Mute Audio";
+            container.innerHTML = ` | <button onclick="soundManager.toggleMute()">${text}</button>`;
+        }
+    },
+
+    playClick: function() {
+        if (this.isMuted || !this.audioCtx) return;
+
+        var osc = this.audioCtx.createOscillator();
+        var gain = this.audioCtx.createGain();
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+
+        // Short high beep for retro feel
+        osc.type = "square";
+        osc.frequency.setValueAtTime(800, this.audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(300, this.audioCtx.currentTime + 0.1);
+
+        gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.1);
+
+        osc.start();
+        osc.stop(this.audioCtx.currentTime + 0.1);
+    },
+
+    startMusic: function() {
+        if (this.isMuted || !this.audioCtx) return;
+        if (this.musicInterval) clearInterval(this.musicInterval);
+
+        // Music logic based on theme
+        var _this = this;
+        var beatTime = 500; // ms
+        var notes = [];
+
+        if (this.currentTheme === "eldritch") {
+            // Low, slow, dissonant
+            beatTime = 800;
+            notes = [110, 103, 97, 103, 82]; // A2, G#2, G2...
+        } else if (this.currentTheme === "unsettling") {
+            // Minor, slightly faster
+            beatTime = 600;
+            notes = [220, 261, 311, 293]; // A3, C4, Eb4, D4
+        } else {
+            // Happy major arpeggio
+            beatTime = 400;
+            notes = [440, 554, 659, 880]; // A4, C#5, E5, A5
+        }
+
+        var noteIndex = 0;
+        this.musicInterval = setInterval(function() {
+            if (_this.isMuted) return;
+
+            var freq = notes[noteIndex % notes.length];
+            _this.playNote(freq);
+            noteIndex++;
+        }, beatTime);
+    },
+
+    stopMusic: function() {
+        if (this.musicInterval) {
+            clearInterval(this.musicInterval);
+            this.musicInterval = null;
+        }
+    },
+
+    playNote: function(freq) {
+        if (!this.audioCtx) return;
+
+        var osc = this.audioCtx.createOscillator();
+        var gain = this.audioCtx.createGain();
+
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+
+        // Simple synth tone
+        osc.type = (this.currentTheme === "eldritch") ? "sawtooth" : "triangle";
+        osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+
+        // Envelope
+        var now = this.audioCtx.currentTime;
+        var dur = 0.3;
+
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.05, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+
+        osc.start(now);
+        osc.stop(now + dur);
+    },
+
+    setTheme: function(theme) {
+        if (this.currentTheme !== theme) {
+            this.currentTheme = theme;
+            if (!this.isMuted) {
+                this.startMusic();
+            }
+        }
+    }
+};
+
 function updateTheme() {
     var stocks = gameState.stockOptions;
     var body = document.body;
@@ -445,11 +629,21 @@ function updateTheme() {
     body.classList.remove("theme-unsettling");
     body.classList.remove("theme-eldritch");
 
+    var newTheme = "normal";
+
     if (stocks >= 1000) {
         body.classList.add("theme-eldritch");
+        newTheme = "eldritch";
     } else if (stocks >= 50) {
         body.classList.add("theme-unsettling");
+        newTheme = "unsettling";
     }
+
+    // Initialize audio context on first theme update (usually start) if not done
+    if (!soundManager.audioCtx) {
+        soundManager.init();
+    }
+    soundManager.setTheme(newTheme);
 }
 
 function calculateStockOptions() {

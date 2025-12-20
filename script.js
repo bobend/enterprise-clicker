@@ -14,47 +14,47 @@ var buyMultiplier = 1;
 
 // Configuration
 var projectList = [
-    { id: "synergy_summit", name: "Synergy Summit", cost: 1000, goal: 100, desc: "Coordinate business efforts. Reward: +5% Passive Income.", rewardType: "passive_mult", rewardValue: 0.05 },
-    { id: "rebranding", name: "Rebranding Campaign", cost: 5000, goal: 250, desc: "New logo, same great taste. Reward: +10% Click Power.", rewardType: "click_mult", rewardValue: 0.10 },
-    { id: "offshore_accounts", name: "Offshore Accounts", cost: 25000, goal: 500, desc: "Hide assets. Reward: +10% Passive Income.", rewardType: "passive_mult", rewardValue: 0.10 },
-    { id: "hostile_takeover", name: "Hostile Takeover", cost: 100000, goal: 1000, desc: "Acquire competition. Reward: +20% Passive Income.", rewardType: "passive_mult", rewardValue: 0.20 },
-    { id: "occult_ritual", name: "Occult Ritual", cost: 666666, goal: 666, desc: "Sacrifice for power. Reward: +66% Click Power.", rewardType: "click_mult", rewardValue: 0.66 }
+    { id: "synergy_summit", name: "Synergy Summit", cost: 1000, goal: 100, desc: "Two blocky business-suited pixel hands shaking over a conference table. Reward: +5% Passive Income.", rewardType: "passive_mult", rewardValue: 0.05, icon: "images/project_synergy_summit.png" },
+    { id: "rebranding", name: "Rebranding Campaign", cost: 5000, goal: 250, desc: "Shiny, blocky yellow 'NEW' logo. Reward: +10% Click Power.", rewardType: "click_mult", rewardValue: 0.10, icon: "images/project_rebranding.png" },
+    { id: "offshore_accounts", name: "Offshore Accounts", cost: 25000, goal: 500, desc: "Tiny pixel treasure chest on a desert island. Reward: +10% Passive Income.", rewardType: "passive_mult", rewardValue: 0.10, icon: "images/project_offshore_accounts.png" },
+    { id: "hostile_takeover", name: "Hostile Takeover", cost: 100000, goal: 1000, desc: "Aggressive grey corporate building 'eating' a smaller one. Reward: +20% Passive Income.", rewardType: "passive_mult", rewardValue: 0.20, icon: "images/project_hostile_takeover.png" },
+    { id: "occult_ritual", name: "Occult Ritual", cost: 666666, goal: 666, desc: "Glowing red pentagram with lit candles. Reward: +66% Click Power.", rewardType: "click_mult", rewardValue: 0.66, icon: "images/project_occult_ritual.png" }
 ];
 
 var metaUpgradeList = [
-    { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "+10% Passive Income per level.", icon: "images/chart.ico" },
-    { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Click power +20% per level.", icon: "images/moneybag.ico" },
-    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Start with $1000 extra cash per level after reset.", icon: "images/handshake.ico" },
-    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Unlocks 1 additional Upgrade in shop (wip). For now: +50% All Income.", icon: "images/ink.svg" },
-    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Capitalize on nothingness. Passive Income x2.", icon: "images/void.svg" }
+    { id: "insider_trading", name: "Insider Trading", cost: 1, costScaling: 2, desc: "Unnatural vertical spike upward on a stock chart. +10% Passive Income per level.", icon: "images/meta_insider_trading.png" },
+    { id: "golden_parachute", name: "Golden Parachute", cost: 2, costScaling: 1.5, desc: "Golden money bag with a parachute. Click power +20% per level.", icon: "images/meta_golden_parachute.png" },
+    { id: "nepotism", name: "Nepotism", cost: 5, costScaling: 3, desc: "Adult hand passing cash to a child's hand. Start with $1000 extra cash per level after reset.", icon: "images/meta_nepotism.png" },
+    { id: "blood_pact", name: "Blood Pact", cost: 10, costScaling: 5, desc: "Ancient scroll signed with a bloody handprint. +50% All Income.", icon: "images/meta_blood_pact.png" },
+    { id: "void_investment", name: "Void Investment", cost: 50, costScaling: 10, desc: "Dark purple vortex sucking in dollar signs. Passive Income x2.", icon: "images/meta_void_investment.png" }
 ];
 
 var jobs = [
-    { title: "Intern", baseRate: 0, clickPower: 1, promoteCost: 100 },
-    { title: "Mailroom Clerk", baseRate: 1, clickPower: 2, promoteCost: 500 },
-    { title: "Junior Associate", baseRate: 5, clickPower: 5, promoteCost: 2000 },
-    { title: "Middle Manager", baseRate: 20, clickPower: 15, promoteCost: 10000 },
-    { title: "Senior VP", baseRate: 100, clickPower: 50, promoteCost: 50000 },
-    { title: "CEO", baseRate: 500, clickPower: 200, promoteCost: 250000 },
-    { title: "Board Member", baseRate: 2000, clickPower: 1000, promoteCost: 1000000 },
-    { title: "Chairman", baseRate: 10000, clickPower: 5000, promoteCost: 5000000 },
-    { title: "Shadow Director", baseRate: 50000, clickPower: 25000, promoteCost: 25000000 },
-    { title: "Grand Architect", baseRate: 200000, clickPower: 100000, promoteCost: 100000000 },
-    { title: "Elder God Avatar", baseRate: 1000000, clickPower: 500000, promoteCost: Infinity }
+    { title: "Intern", baseRate: 0, clickPower: 1, promoteCost: 100, image: "images/job_intern.png" },
+    { title: "Mailroom Clerk", baseRate: 1, clickPower: 2, promoteCost: 500, image: "images/job_clerk.png" },
+    { title: "Junior Associate", baseRate: 5, clickPower: 5, promoteCost: 2000, image: "images/job_junior.png" },
+    { title: "Middle Manager", baseRate: 20, clickPower: 15, promoteCost: 10000, image: "images/job_middle.png" },
+    { title: "Senior VP", baseRate: 100, clickPower: 50, promoteCost: 50000, image: "images/job_vp.png" },
+    { title: "CEO", baseRate: 500, clickPower: 200, promoteCost: 250000, image: "images/job_ceo.png" },
+    { title: "Board Member", baseRate: 2000, clickPower: 1000, promoteCost: 1000000, image: "images/job_board.png" },
+    { title: "Chairman", baseRate: 10000, clickPower: 5000, promoteCost: 5000000, image: "images/job_chairman.png" },
+    { title: "Shadow Director", baseRate: 50000, clickPower: 25000, promoteCost: 25000000, image: "images/job_shadow.png" },
+    { title: "Grand Architect", baseRate: 200000, clickPower: 100000, promoteCost: 100000000, image: "images/job_architect.png" },
+    { title: "Elder God Avatar", baseRate: 1000000, clickPower: 500000, promoteCost: Infinity, image: "images/job_elder.png" }
 ];
 
 var upgradeList = [
-    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "Keeps papers together. +$0.50/sec", icon: "images/stapler.ico" },
-    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "Caffeine boost. +$2.00/sec", icon: "images/coffee.ico" },
-    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Does the grunt work. +$5.00/sec", icon: "images/intern.ico" },
-    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Communication speed. +$10.00/sec", icon: "images/fax.ico" },
-    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "High tech efficiency. +$40.00/sec", icon: "images/computer.ico" },
-    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Data processing. +$100.00/sec", icon: "images/mainframe.ico" },
-    { id: "algorithm", name: "HFT Algorithm", cost: 100000, rate: 500, desc: "Microsecond trading. +$500.00/sec", icon: "images/chart.ico" },
-    { id: "ai_manager", name: "AI Manager", cost: 500000, rate: 2500, desc: "Optimizes workflow. +$2,500.00/sec", icon: "images/computer.ico" },
-    { id: "neural_link", name: "Neural Link", cost: 2500000, rate: 10000, desc: "Direct brain interface. +$10,000.00/sec", icon: "images/mainframe.ico" },
-    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Contracts are binding. +$50,000.00/sec", icon: "images/ink.svg" },
-    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Automated extraction. +$250,000.00/sec", icon: "images/skull.svg" }
+    { id: "stapler", name: "Red Stapler", cost: 50, rate: 0.5, desc: "A bright red, blocky pixelated stapler. +$0.50/sec", icon: "images/upgrade_stapler.png" },
+    { id: "coffee", name: "Cheap Coffee", cost: 150, rate: 2, desc: "White Styrofoam cup with brown liquid. +$2.00/sec", icon: "images/upgrade_coffee.png" },
+    { id: "intern", name: "Unpaid Intern", cost: 500, rate: 5, desc: "Tired-looking pixelated face. +$5.00/sec", icon: "images/upgrade_intern.png" },
+    { id: "copier", name: "Fax Machine", cost: 1200, rate: 10, desc: "Beige, bulky pixelated fax machine. +$10.00/sec", icon: "images/upgrade_copier.png" },
+    { id: "computer", name: "Windows 95 PC", cost: 5000, rate: 40, desc: "Complete beige desktop computer setup. +$40.00/sec", icon: "images/upgrade_computer.png" },
+    { id: "server", name: "Mainframe", cost: 20000, rate: 100, desc: "Tall, black server rack cabinet. +$100.00/sec", icon: "images/upgrade_server.png" },
+    { id: "algorithm", name: "HFT Algorithm", cost: 100000, rate: 500, desc: "Streams of green binary pixel code. +$500.00/sec", icon: "images/upgrade_algorithm.png" },
+    { id: "ai_manager", name: "AI Manager", cost: 500000, rate: 2500, desc: "Robotic metallic pixel head. +$2,500.00/sec", icon: "images/upgrade_ai_manager.png" },
+    { id: "neural_link", name: "Neural Link", cost: 2500000, rate: 10000, desc: "Pink pixelated human brain with wires. +$10,000.00/sec", icon: "images/upgrade_neural_link.png" },
+    { id: "blood_ink", name: "Blood Ink", cost: 10000000, rate: 50000, desc: "Old-fashioned glass inkwell with red liquid. +$50,000.00/sec", icon: "images/upgrade_blood_ink.png" },
+    { id: "soul_harvester", name: "Soul Harvester", cost: 50000000, rate: 250000, desc: "Grim reaper style mechanical scythe. +$250,000.00/sec", icon: "images/upgrade_soul_harvester.png" }
 ];
 
 // Loop variables
@@ -466,10 +466,21 @@ function initProjects() {
         div.style.backgroundColor = "#c0c0c0";
         div.id = "project-row-" + p.id;
 
+        // Add Icon if available
+        var iconHtml = "";
+        if (p.icon) {
+            iconHtml = `<img src="${p.icon}" style="float: left; width: 32px; height: 32px; margin-right: 5px; border: 1px solid gray;">`;
+        }
+
         div.innerHTML = `
-            <b>${p.name}</b><br>
-            <small>${p.desc}</small><br>
-            ${barHTML}
+            <div style="overflow: auto;">
+                ${iconHtml}
+                <b>${p.name}</b><br>
+                <small>${p.desc}</small>
+            </div>
+            <div style="clear: both; margin-top: 5px;">
+                ${barHTML}
+            </div>
             <div style="margin-top: 5px; text-align: right;">
                 <button onclick="contributeProject('${p.id}')" ${buttonDisabled} style="font-size: 10px;">${buttonText}</button>
             </div>
@@ -549,9 +560,21 @@ function updateDisplay() {
     document.getElementById('cash-display').textContent = "$" + gameState.cash.toFixed(2);
     document.getElementById('lifetime-display').textContent = "$" + gameState.lifetimeEarnings.toFixed(2);
     document.getElementById('passive-display').textContent = "$" + getPassiveIncome().toFixed(2);
-    document.getElementById('job-title').textContent = jobs[gameState.jobLevel].title;
+    var job = jobs[gameState.jobLevel];
+    document.getElementById('job-title').textContent = job.title;
 
-    var nextPromote = jobs[gameState.jobLevel].promoteCost;
+    // Update Job Splash
+    var splashImg = document.getElementById("job-splash");
+    if (splashImg && job.image) {
+        if (splashImg.getAttribute("src") !== job.image) { // avoid flicker
+             splashImg.src = job.image;
+        }
+        splashImg.style.display = "block";
+    } else if (splashImg) {
+        splashImg.style.display = "none";
+    }
+
+    var nextPromote = job.promoteCost;
     var promoText = (nextPromote === Infinity) ? "MAX LEVEL" : "$" + nextPromote;
     document.getElementById('next-promotion-cost').textContent = promoText;
 

@@ -232,6 +232,13 @@ body.theme-eldritch h2 {
     letter-spacing: 2px;
 }
 
+#work-btn {
+    width: 200px;
+    height: 100px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .game-columns {

@@ -370,9 +370,11 @@ function initShop() {
         if (buyMultiplier === 100) btnClass = "btn-x100";
         if (buyMultiplier === "MAX") btnClass = "btn-max";
 
+        var safeDesc = u.desc.replace(/'/g, "\\'");
+
         cell.innerHTML = `
             <div class="upgrade-row">
-                <img src="${u.icon}" class="shop-icon upgrade-icon" alt="${u.name}">
+                <img src="${u.icon}" class="shop-icon upgrade-icon" alt="${u.name}" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">
                 <div class="upgrade-details">
                     <b>${u.name}</b> (${count})<br>
                     <small>${u.desc}</small>
@@ -472,7 +474,7 @@ function initMetaShop() {
         var canAfford = gameState.stockOptions >= currentCost;
         var btnDisabled = canAfford ? "" : "disabled";
 
-        var safeDesc = u.desc.replace(/'/g, "&#39;");
+        var safeDesc = u.desc.replace(/'/g, "\\'");
         cell.innerHTML = `
             <div style="border: 1px outset gold; background: #000000; color: gold; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
                  <img src="${u.icon}" class="shop-icon zoomable-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px; border: 1px solid gold;" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">
@@ -592,16 +594,18 @@ function initProjects() {
         var iconHtml = "";
         if (p.icon) {
             var safeDesc = p.desc.replace(/'/g, "\\'");
-            iconHtml = `<img src="${p.icon}" class="zoomable-icon" style="float: left; width: 32px; height: 32px; margin-right: 5px; border: 1px solid gray;" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">`;
+            iconHtml = `<img src="${p.icon}" class="zoomable-icon" style="width: 32px; height: 32px; margin-right: 5px; border: 1px solid gray;" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">`;
         }
 
         div.innerHTML = `
-            <div style="overflow: auto;">
+            <div style="display: flex; align-items: center;">
                 ${iconHtml}
-                <b>${p.name}</b><br>
-                <small>${p.desc}</small>
+                <div>
+                    <b>${p.name}</b><br>
+                    <small>${p.desc}</small>
+                </div>
             </div>
-            <div style="clear: both; margin-top: 5px;">
+            <div style="margin-top: 5px;">
                 ${barHTML}
             </div>
             <div style="margin-top: 5px; text-align: right;">

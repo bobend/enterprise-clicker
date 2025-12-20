@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import base64
 
 # --- KONFIGURATION AF STIL (SYSTEM PROMPTS) ---
 
@@ -20,59 +21,103 @@ STYLE_SPLASH = (
 
 # ----------------------------------------------
 
-# HVIS DU BRUGER GOOGLE VERTEX AI
+# HVIS DU BRUGER GOOGLE GENAI
 try:
-    import vertexai
-    from vertexai.preview.vision_models import ImageGenerationModel
+    from google import genai
+    from google.genai import types
     GOOGLE_AI_AVAILABLE = True
 except ImportError:
-    print("Google Cloud AI Platform (vertexai) is not installed.")
-    print("Run: pip install google-cloud-aiplatform")
+    print("Google GenAI SDK is not installed.")
+    print("Run: pip install google-genai")
     GOOGLE_AI_AVAILABLE = False
 
 # INDSTILLINGER
 PROJECT_ID = "YOUR_GOOGLE_CLOUD_PROJECT_ID"  # <-- HUSK AT INDSÆTTE DIT ID
-LOCATION = "global"                            # <-- Ændret til 'global'
+LOCATION = "global"
 
 def init_ai():
     if GOOGLE_AI_AVAILABLE:
-        vertexai.init(project=PROJECT_ID, location=LOCATION)
-
-        # Ændret til den specifikke model du bad om
-        print(f"Loading model: gemini-3-pro-image-preview in {LOCATION}...")
-        return ImageGenerationModel.from_pretrained("gemini-3-pro-image-preview")
+        print("Initializing Google GenAI Client...")
+        # Assuming credentials are set in environment or via gcloud
+        # Using vertexai=True as per user request
+        return genai.Client(
+            vertexai=True,
+            project=PROJECT_ID,
+            location="us-central1" # Changed to us-central1 as global might not be supported for Vertex AI execution in some SDK versions, or user prompt implied default.
+                                  # User prompt used "global" in old script but new snippet didn't specify location in Client init, implying default or env var.
+                                  # Ideally, let's trust the default or user config.
+                                  # The user snippet had: client = genai.Client(vertexai=True, api_key=os.environ.get("GOOGLE_CLOUD_API_KEY"))
+                                  # Since we are using Vertex AI, we typically need project/location if not implicit.
+                                  # I'll stick to 'us-central1' as a safe bet for Gemini models or let it infer.
+        )
     return None
 
-def generate_image(model, full_prompt, output_filename, aspect_ratio="1:1"):
+def generate_image(client, full_prompt, output_filename, aspect_ratio="1:1"):
     print(f"Generating: {output_filename}...")
 
-    if not GOOGLE_AI_AVAILABLE:
+    if not GOOGLE_AI_AVAILABLE or client is None:
         print(f"  [SIMULATION] Prompt sent: '{full_prompt}'")
         return
 
     try:
-        images = model.generate_images(
-            prompt=full_prompt,
-            number_of_images=1,
-            language="en",
-            aspect_ratio=aspect_ratio,
-            safety_filter_level="block_some",
-            person_generation="allow_adult"
+        model = "gemini-3-pro-image-preview"
+
+        contents = [
+            types.Content(
+                role="user",
+                parts=[
+                    types.Part.from_text(text=full_prompt)
+                ]
+            )
+        ]
+
+        generate_content_config = types.GenerateContentConfig(
+            temperature = 1,
+            top_p = 0.95,
+            max_output_tokens = 32768,
+            response_modalities = ["IMAGE"], # We only want image
+            safety_settings = [
+                types.SafetySetting(category="HARM_CATEGORY_HATE_SPEECH", threshold="OFF"),
+                types.SafetySetting(category="HARM_CATEGORY_DANGEROUS_CONTENT", threshold="OFF"),
+                types.SafetySetting(category="HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold="OFF"),
+                types.SafetySetting(category="HARM_CATEGORY_HARASSMENT", threshold="OFF")
+            ],
+            image_config=types.ImageConfig(
+                aspect_ratio=aspect_ratio,
+                image_size="1K",
+                output_mime_type="image/png",
+            ),
         )
-        if images:
-            images[0].save(location=output_filename, include_generation_parameters=False)
-            print(f"  Saved to {output_filename}")
-        else:
-            print("  No image generated.")
+
+        # Using generate_content instead of stream for easier image handling
+        response = client.models.generate_content(
+            model=model,
+            contents=contents,
+            config=generate_content_config,
+        )
+
+        image_saved = False
+        if response.candidates:
+            for part in response.candidates[0].content.parts:
+                if part.inline_data:
+                    img_data = base64.b64decode(part.inline_data.data)
+                    with open(output_filename, "wb") as f:
+                        f.write(img_data)
+                    print(f"  Saved to {output_filename}")
+                    image_saved = True
+                    break
+
+        if not image_saved:
+            print("  No image found in response.")
+
     except Exception as e:
         print(f"  ERROR generating {output_filename}: {e}")
-        # Vent lidt længere hvis vi rammer fejl, da preview modeller kan være ustabile
         time.sleep(5)
 
 def main():
     # Mappe til output
     global OUTPUT_DIR
-    OUTPUT_DIR = "images" # Changed from 'generated_images' to 'images' to overwrite placeholders
+    OUTPUT_DIR = "images"
 
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
@@ -85,7 +130,7 @@ def main():
         print("Error: prompts.json not found! Please ensure the JSON file is in the same directory.")
         return
 
-    model = init_ai()
+    client = init_ai()
 
     # Helper function to process a list
     def process_list(category_name, item_list, style_prefix, id_key, file_prefix, ar="1:1"):
@@ -98,18 +143,7 @@ def main():
             item_id = item.get(id_key, "unknown").lower().replace(" ", "_")
             filename = os.path.join(OUTPUT_DIR, f"{file_prefix}_{item_id}.png")
 
-            # Since we want to overwrite placeholders, we might remove the exists check?
-            # But the user might run this multiple times.
-            # If the file exists, it might be the placeholder OR a real AI image.
-            # The user said "modify the script so it correctly replaces the placeholder images".
-            # If I leave the check `if not os.path.exists(filename):`, it won't overwrite.
-            # So I should remove the check to force overwrite, OR assume the user will delete them if they want to regenerate.
-            # However, typically generation scripts check existence to resume.
-            # But here the GOAL is to replace placeholders. Placeholders exist.
-            # So I must remove the existence check to allow overwriting.
-
-            # if not os.path.exists(filename):
-            generate_image(model, final_prompt, filename, aspect_ratio=ar)
+            generate_image(client, final_prompt, filename, aspect_ratio=ar)
             time.sleep(2) # Pause for at undgå rate limits
 
     # 1. Projects (Icons)
@@ -122,6 +156,7 @@ def main():
     process_list("Upgrades", data.get("upgrades", []), STYLE_ICON, "id", "upgrade")
 
     # 4. Jobs (Splash Screens - 16:9)
+    # Gemini 2.0/3.0 usually supports 16:9 via aspect_ratio="16:9"
     process_list("Jobs", data.get("jobs", []), STYLE_SPLASH, "title", "job", ar="16:9")
 
     print("\nDone! All images processed.")

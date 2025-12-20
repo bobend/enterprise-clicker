@@ -172,6 +172,7 @@ function addCash(amount) {
     gameState.cash += amount;
     gameState.lifetimeEarnings += amount;
     updateDisplay();
+    updateShopVisibility();
 
     // Trigger pulse animation
     var display = document.getElementById("cash-display");
@@ -305,17 +306,62 @@ function initShop() {
         var count = gameState.upgrades[u.id] || 0;
         var cost = getUpgradeCost(u, count, buyMultiplier);
 
+        // Assign an ID to the row for filtering
+        row.id = "upgrade-row-" + u.id;
+
         cell.innerHTML = `
-            <div style="border: 1px outset white; background: #c0c0c0; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
-                <img src="${u.icon}" class="shop-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px;">
-                <div>
+            <div class="upgrade-row">
+                <img src="${u.icon}" class="shop-icon upgrade-icon" alt="${u.name}">
+                <div class="upgrade-details">
                     <b>${u.name}</b> (${count})<br>
-                    <small>${u.desc}</small><br>
-                    Buy x${buyMultiplier} Cost: $${cost.toLocaleString()}<br>
+                    <small>${u.desc}</small>
+                </div>
+                <div class="upgrade-actions">
+                    <small>Cost: $${cost.toLocaleString()}</small>
                     <button onclick="buyUpgrade('${u.id}')">Buy x${buyMultiplier}</button>
                 </div>
             </div>
         `;
+    }
+
+    updateShopVisibility();
+}
+
+function updateShopVisibility() {
+    var nextFound = false;
+
+    for (var i = 0; i < upgradeList.length; i++) {
+        var u = upgradeList[i];
+        var row = document.getElementById("upgrade-row-" + u.id);
+        if (!row) continue;
+
+        var count = gameState.upgrades[u.id] || 0;
+        var cost = getUpgradeCost(u, count, 1); // Check affordabilty of 1 unit
+        var canAfford = gameState.cash >= cost;
+        var isBought = count > 0;
+
+        // "The only upgrade you have bought before or can afford or is the next upgrade you can save up for."
+        // Meaning:
+        // 1. We bought it at least once.
+        // 2. OR we can afford it now.
+        // 3. OR it's the *first* one we haven't bought and can't afford (the "next" target).
+
+        var shouldShow = false;
+
+        if (isBought) {
+            shouldShow = true;
+        } else if (canAfford) {
+            shouldShow = true;
+        } else if (!nextFound) {
+            // This is the first unbought, unaffordable item
+            shouldShow = true;
+            nextFound = true;
+        } else {
+            // Unbought, unaffordable, and we already found the "next" target
+            shouldShow = false;
+        }
+
+        row.style.display = shouldShow ? "" : "none";
     }
 }
 

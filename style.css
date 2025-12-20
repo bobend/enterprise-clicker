@@ -260,3 +260,39 @@ body.theme-eldritch h2 {
         height: 80px;
     }
 }
+
+.upgrade-row {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border: 1px outset white;
+    background: #c0c0c0;
+    margin-bottom: 5px;
+}
+
+.upgrade-icon {
+    margin-right: 10px;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.upgrade-details {
+    flex-grow: 1;
+    margin-right: 5px;
+}
+
+.upgrade-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
+    min-width: 80px;
+    text-align: right;
+}
+
+/* Ensure buttons in actions don't stretch weirdly */
+.upgrade-actions button {
+    margin-top: 5px;
+    width: 100%;
+}

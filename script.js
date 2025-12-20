@@ -19,7 +19,7 @@ var projectList = [
     { id: "offshore_accounts", name: "Offshore Accounts", cost: 25000, goal: 500, desc: "Tax optimization strategies. Reward: +10% Passive Income.", rewardType: "passive_mult", rewardValue: 0.10, icon: "images/project_offshore_accounts.png" },
     { id: "hostile_takeover", name: "Hostile Takeover", cost: 100000, goal: 1000, desc: "Acquire the competition. Reward: +20% Passive Income.", rewardType: "passive_mult", rewardValue: 0.20, icon: "images/project_hostile_takeover.png" },
     { id: "occult_ritual", name: "Occult Ritual", cost: 666666, goal: 666, desc: "Sacrifices must be made. Reward: +66% Click Power.", rewardType: "click_mult", rewardValue: 0.66, icon: "images/project_occult_ritual.png" },
-    { id: "ai_slop_generator", name: "Generative Text Engine", cost: 1000000, goal: 2000, desc: "Flood the internet with content. Reward: +50% Passive Income. Warning: Unforeseen side effects.", rewardType: "passive_mult", rewardValue: 0.50, icon: "images/project_ai_slop.png" },
+    { id: "ai_slop_generator", name: "Generative Text Engine", cost: 1000000, goal: 2000, desc: "Flood the internet with content. Reward: +50% Passive Income. Warning: Unforeseen side effects.", rewardType: "passive_mult", rewardValue: 0.50, icon: "images/project_ai_slop_generator.png" },
     { id: "image_hallucinator", name: "Image Hallucinator", cost: 5000000, goal: 5000, desc: "Generate infinite visuals. Reward: +100% Click Power. Warning: Reality stability decreases.", rewardType: "click_mult", rewardValue: 1.00, icon: "images/project_image_hallucinator.png" }
 ];
 

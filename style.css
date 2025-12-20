@@ -110,6 +110,23 @@ button:disabled {
     cursor: default;
 }
 
+.btn-x1 {
+    /* Standard gray */
+    background-color: #d4d0c8;
+}
+.btn-x10 {
+    /* Light Blue */
+    background-color: #aaccff;
+}
+.btn-x100 {
+    /* Light Purple */
+    background-color: #ddaaff;
+}
+.btn-max {
+    /* Light Orange */
+    background-color: #ffccaa;
+}
+
 .box-bevel {
     border-top: 2px solid #404040;
     border-left: 2px solid #404040;
@@ -284,7 +301,18 @@ body.theme-eldritch h2 {
 
 .upgrade-icon:hover {
     transform: scale(2);
-    z-index: 10;
+    z-index: 100;
+    position: relative;
+    cursor: help;
+}
+
+.zoomable-icon {
+    transition: transform 0.2s ease;
+}
+
+.zoomable-icon:hover {
+    transform: scale(2);
+    z-index: 100;
     position: relative;
     cursor: help;
 }

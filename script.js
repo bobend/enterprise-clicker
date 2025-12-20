@@ -362,16 +362,26 @@ function initShop() {
         // Assign an ID to the row for filtering
         row.id = "upgrade-row-" + u.id;
 
+        var canAfford = gameState.cash >= cost;
+        var btnDisabled = canAfford ? "" : "disabled";
+
+        var btnClass = "btn-x1";
+        if (buyMultiplier === 10) btnClass = "btn-x10";
+        if (buyMultiplier === 100) btnClass = "btn-x100";
+        if (buyMultiplier === "MAX") btnClass = "btn-max";
+
+        var safeDesc = u.desc.replace(/'/g, "\\'");
+
         cell.innerHTML = `
             <div class="upgrade-row">
-                <img src="${u.icon}" class="shop-icon upgrade-icon" alt="${u.name}">
+                <img src="${u.icon}" class="shop-icon upgrade-icon" alt="${u.name}" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">
                 <div class="upgrade-details">
                     <b>${u.name}</b> (${count})<br>
                     <small>${u.desc}</small>
                 </div>
                 <div class="upgrade-actions">
                     <small>Cost: $${formatNumber(cost)}</small>
-                    <button onclick="buyUpgrade('${u.id}')">Buy ${buyMultiplier === 'MAX' ? 'x' + displayAmount : 'x' + buyMultiplier}</button>
+                    <button onclick="buyUpgrade('${u.id}')" ${btnDisabled} class="${btnClass}">Buy ${buyMultiplier === 'MAX' ? 'x' + displayAmount : 'x' + buyMultiplier}</button>
                 </div>
             </div>
         `;
@@ -461,18 +471,53 @@ function initMetaShop() {
         var count = gameState.metaUpgrades[u.id] || 0;
         var currentCost = Math.floor(u.cost * Math.pow(u.costScaling, count));
 
+        var canAfford = gameState.stockOptions >= currentCost;
+        var btnDisabled = canAfford ? "" : "disabled";
+
+        var safeDesc = u.desc.replace(/'/g, "\\'");
         cell.innerHTML = `
             <div style="border: 1px outset gold; background: #000000; color: gold; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
-                 <img src="${u.icon}" class="shop-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px; border: 1px solid gold;">
+                 <img src="${u.icon}" class="shop-icon zoomable-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px; border: 1px solid gold;" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">
                  <div>
                     <b>${u.name}</b> (Lvl ${count})<br>
                     <small style="color: #ffffaa;">${u.desc}</small><br>
                     Cost: ${currentCost} Stocks<br>
-                    <button onclick="buyMetaUpgrade('${u.id}')" style="background: gold; color: black; border-color: #886600;">Invest</button>
+                    <button onclick="buyMetaUpgrade('${u.id}')" style="background: gold; color: black; border-color: #886600;" ${btnDisabled}>Invest</button>
                  </div>
             </div>
         `;
     }
+}
+
+// --- TOOLTIP SYSTEM ---
+function showTooltip(e, text) {
+    var tooltip = document.getElementById("custom-tooltip");
+    if (!tooltip) return;
+    tooltip.innerHTML = text;
+    tooltip.style.display = "block";
+    moveTooltip(e);
+}
+
+function moveTooltip(e) {
+    var tooltip = document.getElementById("custom-tooltip");
+    if (!tooltip) return;
+
+    // Offset slightly from cursor
+    var x = e.pageX + 10;
+    var y = e.pageY + 10;
+
+    // Boundary check (optional/simple)
+    if (x + 200 > window.innerWidth) {
+        x = e.pageX - 210;
+    }
+
+    tooltip.style.left = x + "px";
+    tooltip.style.top = y + "px";
+}
+
+function hideTooltip() {
+    var tooltip = document.getElementById("custom-tooltip");
+    if (tooltip) tooltip.style.display = "none";
 }
 
 function buyMetaUpgrade(id) {
@@ -505,13 +550,27 @@ function initProjects() {
 
         var pct = Math.min(100, Math.floor((progress / p.goal) * 100));
         var statusText = isComplete ? "COMPLETED" : pct + "%";
-        var buttonDisabled = isComplete ? "disabled" : "";
 
-        var amount = Math.min(buyMultiplier, p.goal - progress);
-        if (amount <= 0 && !isComplete) amount = 1; // Fallback
+        var amount = 0;
+        if (buyMultiplier === "MAX") {
+            var maxAffordable = Math.floor(gameState.cash / p.cost);
+            amount = Math.min(maxAffordable, p.goal - progress);
+            if (amount <= 0 && !isComplete) amount = 1;
+        } else {
+            amount = Math.min(buyMultiplier, p.goal - progress);
+            if (amount <= 0 && !isComplete) amount = 1;
+        }
 
         var currentCost = p.cost * amount;
+        var canAfford = gameState.cash >= currentCost;
+        var buttonDisabled = (isComplete || !canAfford) ? "disabled" : "";
         var buttonText = isComplete ? "Done" : "Fund x" + amount + " ($" + currentCost.toLocaleString() + ")";
+
+        // Determine button class based on multiplier
+        var btnClass = "btn-x1";
+        if (buyMultiplier === 10) btnClass = "btn-x10";
+        if (buyMultiplier === 100) btnClass = "btn-x100";
+        if (buyMultiplier === "MAX") btnClass = "btn-max";
 
         // Simple HTML progress bar
         var barColor = isComplete ? "#008000" : "#000080";
@@ -534,20 +593,23 @@ function initProjects() {
         // Add Icon if available
         var iconHtml = "";
         if (p.icon) {
-            iconHtml = `<img src="${p.icon}" style="float: left; width: 32px; height: 32px; margin-right: 5px; border: 1px solid gray;">`;
+            var safeDesc = p.desc.replace(/'/g, "\\'");
+            iconHtml = `<img src="${p.icon}" class="zoomable-icon" style="width: 32px; height: 32px; margin-right: 5px; border: 1px solid gray;" onmouseenter="showTooltip(event, '${safeDesc}')" onmousemove="moveTooltip(event)" onmouseleave="hideTooltip()">`;
         }
 
         div.innerHTML = `
-            <div style="overflow: auto;">
+            <div style="display: flex; align-items: center;">
                 ${iconHtml}
-                <b>${p.name}</b><br>
-                <small>${p.desc}</small>
+                <div>
+                    <b>${p.name}</b><br>
+                    <small>${p.desc}</small>
+                </div>
             </div>
-            <div style="clear: both; margin-top: 5px;">
+            <div style="margin-top: 5px;">
                 ${barHTML}
             </div>
             <div style="margin-top: 5px; text-align: right;">
-                <button onclick="contributeProject('${p.id}')" ${buttonDisabled} style="font-size: 10px;">${buttonText}</button>
+                <button onclick="contributeProject('${p.id}')" ${buttonDisabled} class="${btnClass}" style="font-size: 10px;">${buttonText}</button>
             </div>
         `;
         container.appendChild(div);
@@ -592,7 +654,15 @@ function contributeProject(id) {
     var progress = gameState.sideProjects[id] || 0;
     if (progress >= p.goal) return;
 
-    var amount = Math.min(buyMultiplier, p.goal - progress);
+    var amount = 0;
+    if (buyMultiplier === "MAX") {
+        var maxAffordable = Math.floor(gameState.cash / p.cost);
+        amount = Math.min(maxAffordable, p.goal - progress);
+        if (amount <= 0) amount = 1;
+    } else {
+        amount = Math.min(buyMultiplier, p.goal - progress);
+    }
+
     var totalCost = p.cost * amount;
 
     if (gameState.cash >= totalCost) {
@@ -1016,11 +1086,11 @@ function initMarket() {
     }
 
     stockMarket = [
-        { symbol: "VOID", name: "Void Corp", price: 10.00, volatility: 0.15, trend: 0 },
-        { symbol: "BLUD", name: "Blood Bank", price: 25.00, volatility: 0.05, trend: 0.02 },
-        { symbol: "SYNR", name: "Synergy Ltd", price: 50.00, volatility: 0.08, trend: -0.01 },
-        { symbol: "SOUL", name: "Soul Systems", price: 100.00, volatility: 0.12, trend: 0 },
-        { symbol: "GLITCH", name: "Null Pointer", price: 5.00, volatility: 0.25, trend: 0.05 }
+        { symbol: "VOID", name: "Void Corp", price: 10.00, volatility: 0.15, trend: 0, history: [] },
+        { symbol: "BLUD", name: "Blood Bank", price: 25.00, volatility: 0.05, trend: 0.02, history: [] },
+        { symbol: "SYNR", name: "Synergy Ltd", price: 50.00, volatility: 0.08, trend: -0.01, history: [] },
+        { symbol: "SOUL", name: "Soul Systems", price: 100.00, volatility: 0.12, trend: 0, history: [] },
+        { symbol: "GLITCH", name: "Null Pointer", price: 5.00, volatility: 0.25, trend: 0.05, history: [] }
     ];
 
     // Initial render
@@ -1044,6 +1114,11 @@ function updateMarket() {
         s.price = s.price * (1 + change);
         if (s.price < 0.10) s.price = 0.10; // Floor
 
+        // Update history
+        if (!s.history) s.history = [];
+        s.history.push(s.price);
+        if (s.history.length > 20) s.history.shift();
+
         // Update trend occasionally
         if (Math.random() < 0.05) {
             s.trend = (Math.random() - 0.5) * 0.05;
@@ -1051,6 +1126,29 @@ function updateMarket() {
     }
 
     updateMarketDisplay();
+}
+
+function generateSparkline(history) {
+    if (!history || history.length < 2) return "";
+
+    var width = 60;
+    var height = 20;
+    var min = Math.min(...history);
+    var max = Math.max(...history);
+    var range = max - min;
+    if (range === 0) range = 1;
+
+    var points = history.map((val, index) => {
+        var x = (index / (history.length - 1)) * width;
+        var y = height - ((val - min) / range) * height;
+        return `${x},${y}`;
+    }).join(" ");
+
+    var color = history[history.length - 1] >= history[0] ? "#00ff00" : "#ff0000";
+
+    return `<svg width="${width}" height="${height}" style="background: black; border: 1px solid #333;">
+                <polyline points="${points}" style="fill:none;stroke:${color};stroke-width:1" />
+            </svg>`;
 }
 
 function updateMarketDisplay() {
@@ -1067,16 +1165,21 @@ function updateMarketDisplay() {
         var trendClass = s.trend >= 0 ? "stock-up" : "stock-down";
         var trendSymbol = s.trend >= 0 ? "▲" : "▼";
 
+        var sparkline = generateSparkline(s.history || []);
+
         html += `
             <div class="stock-ticker-row">
-                <div style="width: 30%;">
+                <div style="width: 25%;">
                     <span class="stock-symbol">${s.symbol}</span><br>
                     <span style="font-size:10px;">Owned: ${owned}</span>
                 </div>
-                <div style="width: 30%; text-align: right;" class="stock-price">
+                <div style="width: 20%;">
+                    ${sparkline}
+                </div>
+                <div style="width: 25%; text-align: right;" class="stock-price">
                     $${s.price.toFixed(2)}
                 </div>
-                <div style="width: 40%; text-align: right;">
+                <div style="width: 30%; text-align: right;">
                     <button onclick="buyStock('${s.symbol}')" style="font-size: 10px; padding: 1px 3px;">Buy</button>
                     <button onclick="sellStock('${s.symbol}')" style="font-size: 10px; padding: 1px 3px;">Sell</button>
                 </div>

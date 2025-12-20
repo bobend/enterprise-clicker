@@ -4,7 +4,9 @@
         {"id": "rebranding", "desc": "A pixelated spray paint can is spraying over an old, faded grey 'OLD' logo to reveal a shiny, blocky yellow 'NEW' logo underneath."},
         {"id": "offshore_accounts", "desc": "A tiny pixel treasure chest overflowing with gold coins sitting on a very small desert island with one palm tree. Blue ocean water."},
         {"id": "hostile_takeover", "desc": "A large, aggressive-looking grey pixel corporate building with angry windows is literally 'eating' a smaller, scared-looking building."},
-        {"id": "occult_ritual", "desc": "A glowing red pixelated pentagram drawn on a stone floor with five lit blocky candles around it."}
+        {"id": "occult_ritual", "desc": "A glowing red pixelated pentagram drawn on a stone floor with five lit blocky candles around it."},
+        {"id": "ai_slop_generator", "desc": "A massive server farm filled with humming pixel machines, each with a glowing blue screen displaying endless scrolling generated text. Cooling fans and cables everywhere, with warning signs on the walls."},
+        {"id": "image_hallucinator", "desc": "A surreal workspace where multiple floating holographic screens display constantly morphing, glitchy pixel images. Some images bleed into reality, with strange artifacts and impossible geometry visible in the background."}
     ],
     "meta_upgrades": [
         {"id": "insider_trading", "desc": "A pixel stock market chart on green grid paper showing a massive, unnatural vertical spike upward, with a sly pixelated eye peeking from behind the chart."},

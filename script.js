@@ -31,16 +31,16 @@ var metaUpgradeList = [
 
 var jobs = [
     { title: "Intern", baseRate: 0, clickPower: 1, promoteCost: 100, image: "images/job_intern.png" },
-    { title: "Mailroom Clerk", baseRate: 1, clickPower: 2, promoteCost: 500, image: "images/job_clerk.png" },
-    { title: "Junior Associate", baseRate: 5, clickPower: 5, promoteCost: 2000, image: "images/job_junior.png" },
-    { title: "Middle Manager", baseRate: 20, clickPower: 15, promoteCost: 10000, image: "images/job_middle.png" },
-    { title: "Senior VP", baseRate: 100, clickPower: 50, promoteCost: 50000, image: "images/job_vp.png" },
+    { title: "Mailroom Clerk", baseRate: 1, clickPower: 2, promoteCost: 500, image: "images/job_mailroom_clerk.png" },
+    { title: "Junior Associate", baseRate: 5, clickPower: 5, promoteCost: 2000, image: "images/job_junior_associate.png" },
+    { title: "Middle Manager", baseRate: 20, clickPower: 15, promoteCost: 10000, image: "images/job_middle_manager.png" },
+    { title: "Senior VP", baseRate: 100, clickPower: 50, promoteCost: 50000, image: "images/job_senior_vp.png" },
     { title: "CEO", baseRate: 500, clickPower: 200, promoteCost: 250000, image: "images/job_ceo.png" },
-    { title: "Board Member", baseRate: 2000, clickPower: 1000, promoteCost: 1000000, image: "images/job_board.png" },
+    { title: "Board Member", baseRate: 2000, clickPower: 1000, promoteCost: 1000000, image: "images/job_board_member.png" },
     { title: "Chairman", baseRate: 10000, clickPower: 5000, promoteCost: 5000000, image: "images/job_chairman.png" },
-    { title: "Shadow Director", baseRate: 50000, clickPower: 25000, promoteCost: 25000000, image: "images/job_shadow.png" },
-    { title: "Grand Architect", baseRate: 200000, clickPower: 100000, promoteCost: 100000000, image: "images/job_architect.png" },
-    { title: "Elder God Avatar", baseRate: 1000000, clickPower: 500000, promoteCost: Infinity, image: "images/job_elder.png" }
+    { title: "Shadow Director", baseRate: 50000, clickPower: 25000, promoteCost: 25000000, image: "images/job_shadow_director.png" },
+    { title: "Grand Architect", baseRate: 200000, clickPower: 100000, promoteCost: 100000000, image: "images/job_grand_architect.png" },
+    { title: "Elder God Avatar", baseRate: 1000000, clickPower: 500000, promoteCost: Infinity, image: "images/job_elder_god_avatar.png" }
 ];
 
 var upgradeList = [

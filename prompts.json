@@ -1,0 +1,42 @@
+{
+    "projects": [
+        {"id": "synergy_summit", "desc": "Two blocky business-suited pixel hands shaking over a conference table with a small upward-trending graph in the background."},
+        {"id": "rebranding", "desc": "A pixelated spray paint can is spraying over an old, faded grey 'OLD' logo to reveal a shiny, blocky yellow 'NEW' logo underneath."},
+        {"id": "offshore_accounts", "desc": "A tiny pixel treasure chest overflowing with gold coins sitting on a very small desert island with one palm tree. Blue ocean water."},
+        {"id": "hostile_takeover", "desc": "A large, aggressive-looking grey pixel corporate building with angry windows is literally 'eating' a smaller, scared-looking building."},
+        {"id": "occult_ritual", "desc": "A glowing red pixelated pentagram drawn on a stone floor with five lit blocky candles around it."}
+    ],
+    "meta_upgrades": [
+        {"id": "insider_trading", "desc": "A pixel stock market chart on green grid paper showing a massive, unnatural vertical spike upward, with a sly pixelated eye peeking from behind the chart."},
+        {"id": "golden_parachute", "desc": "A large, blocky golden pixel money bag with dollar signs on it, attached to an open parachute, floating down against a blue sky."},
+        {"id": "nepotism", "desc": "Two pixel hands shaking; one hand belongs to an adult in a suit, passing cash to a clearly much smaller child's hand also in a tiny suit."},
+        {"id": "blood_pact", "desc": "An ancient-looking pixel scroll contract open with glowing red text, signed with a bloody handprint. A quill pen dripping red 'blood ink' is beside it."},
+        {"id": "void_investment", "desc": "A swirling, dark purple and black pixel vortex or black hole in the center of the frame, sucking in tiny pixelated dollar signs."}
+    ],
+    "jobs": [
+        {"title": "Intern", "desc": "A cramped, tiny grey office cubicle. An overflowing inbox tray of papers, an old beige CRT monitor showing a sad face error, and a cold cup of coffee."},
+        {"title": "Mailroom Clerk", "desc": "A basement mailroom setting with shelves full of blocky pixel boxes and envelopes. A large sorting machine with gears and a mail cart. Fluorescent lighting."},
+        {"title": "Junior Associate", "desc": "A standard open-plan office floor. Multiple identical beige desks with computers, swivel chairs, and some potted pixel plants. A window shows a brick wall outside."},
+        {"title": "Middle Manager", "desc": "A slightly larger private office. A desk with a nameplate, a water cooler in the corner, and a window with a partial view of a pixelated city street."},
+        {"title": "Senior VP", "desc": "A large corner office with a wide window view of a city skyline. A polished wood desk, a leather chair, and a small pixelated golf putter set on the floor."},
+        {"title": "CEO", "desc": "A luxurious penthouse office suite. Panoramic windows showing the whole city below, a large mahogany desk, a fireplace, and a pixelated cigar resting in an ashtray."},
+        {"title": "Board Member", "desc": "A long, imposing boardroom table made of dark wood. Multiple high-backed leather chairs facing a large projection screen showing an upward graph."},
+        {"title": "Chairman", "desc": "An opulent, almost throne-like office at the very top of a skyscraper. The city below looks tiny. The furniture is gold-trimmed, and the lighting is dramatic."},
+        {"title": "Shadow Director", "desc": "A dark, secretive room. Only silhouettes of figures are visible around a glowing table displaying a holographic pixel globe of the Earth."},
+        {"title": "Grand Architect", "desc": "A surreal scene. The user is looking down at reality like a blueprint. Glowing wireframe structures of reality are being manipulated by giant translucent pixel hands in a cosmic void."},
+        {"title": "Elder God Avatar", "desc": "Cosmic horror meets corporate. A colossal, dark pixelated eldritch entity (tentacles and many eyes) wearing a tattered business suit, looming over a tiny, burning pixelated Earth in space."}
+    ],
+    "upgrades": [
+        {"id": "stapler", "desc": "A bright red, blocky pixelated Swingline-style desktop stapler."},
+        {"id": "coffee", "desc": "A white Styrofoam cup with brown pixel liquid and steam rising, next to a coffee stain."},
+        {"id": "intern", "desc": "A tired-looking pixelated young person face with messy hair and large bags under their eyes, holding a stack of papers."},
+        {"id": "copier", "desc": "A beige, bulky pixelated fax machine with paper feeding into it and a phone handset attached."},
+        {"id": "computer", "desc": "A complete beige desktop computer setup: a CRT monitor displaying the Windows 95 cloud logo, a keyboard, and a mouse."},
+        {"id": "server", "desc": "A tall, black server rack cabinet with blinking red and green pixel lights and tape reels spinning."},
+        {"id": "algorithm", "desc": "Streams of green binary pixel code falling like rain (Matrix style), forming a dollar sign shape in the center."},
+        {"id": "ai_manager", "desc": "A robotic metallic pixel head wearing a business suit tie, with a single glowing red camera lens for an eye."},
+        {"id": "neural_link", "desc": "A pink pixelated human brain with several thick grey wires and plugs jammed directly into it."},
+        {"id": "blood_ink", "desc": "An old-fashioned glass inkwell pot glowing with deep red liquid, and a quill pen dipped into it."},
+        {"id": "soul_harvester", "desc": "A grim reaper style scythe, but the blade is made of mechanical gears, and it is swooshing through tiny, translucent blue ghost pixels."}
+    ]
+}

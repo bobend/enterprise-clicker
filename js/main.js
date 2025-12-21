@@ -3,13 +3,14 @@ import { jobs, upgradeList, metaUpgradeList, projectList } from './modules/const
 import { getPassiveIncome, getUpgradeCost, calculateMaxAffordable, calculateStockOptions, formatNumber } from './modules/logic.js';
 import { soundManager } from './modules/audio.js';
 import {
-    initMarket, updateMarket, updateMarketDisplay,
-    initMicromanagement, updateMicromanagement, updateMicromanagementUI,
+    initMarket, updateMarket,
+    initMicromanagement, updateMicromanagement,
     checkSideProjectConsequences, stockMarket
 } from './modules/minigames.js';
 import {
     updateDisplay, initShop, initShopControls, initMetaShop,
     initProjects, updateShopVisibility, updateProjectVisibility,
+    updateMarketDisplay, updateMicromanagementUI,
     logMessage, getBuyMultiplier
 } from './modules/ui.js';
 

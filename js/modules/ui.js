@@ -2,7 +2,7 @@ import { gameState, saveGame } from './state.js';
 import { formatNumber, getPassiveIncome, getUpgradeCost, calculateMaxAffordable, calculateStockOptions } from './logic.js';
 import { soundManager } from './audio.js';
 import { upgradeList, metaUpgradeList, projectList, jobs } from './constants.js';
-import { stockMarket, generateSparkline, motivateEmployee as motivateEmployeeLogic } from './minigames.js';
+import { stockMarket, generateSparkline, motivateEmployee as motivateEmployeeLogic, hireEmployee as hireEmployeeLogic, fireEmployee as fireEmployeeLogic, sacrificeEmployee as sacrificeEmployeeLogic } from './minigames.js';
 
 var buyMultiplier = 1;
 
@@ -196,7 +196,11 @@ export function initShop(buyUpgradeCallback) {
         if (buyMultiplier === 100) btnClass = "btn-x100";
         if (buyMultiplier === "MAX") btnClass = "btn-max";
 
-        var safeDesc = u.desc.replace(/'/g, "\\'");
+        var tooltipText = u.desc;
+        if (u.flavor) {
+            tooltipText += "<br><br><i>" + u.flavor + "</i>";
+        }
+        var safeDesc = tooltipText.replace(/'/g, "\\'");
 
         cell.innerHTML = `
             <div class="upgrade-row">
@@ -241,7 +245,11 @@ export function initMetaShop(buyMetaCallback) {
         var canAfford = gameState.stockOptions >= currentCost;
         var btnDisabled = canAfford ? "" : "disabled";
 
-        var safeDesc = u.desc.replace(/'/g, "\\'");
+        var tooltipText = u.desc;
+        if (u.flavor) {
+            tooltipText += "<br><br><i>" + u.flavor + "</i>";
+        }
+        var safeDesc = tooltipText.replace(/'/g, "\\'");
         cell.innerHTML = `
             <div class="meta-shop-item" style="border: 1px outset gold; background: #000000; color: gold; padding: 5px; margin-bottom: 5px; display: flex; align-items: center;">
                  <img src="${u.icon}" class="shop-icon zoomable-icon" alt="${u.name}" style="margin-right: 10px; width: 32px; height: 32px; border: 1px solid gold;"
@@ -316,7 +324,11 @@ export function initProjects(contributeCallback) {
 
         var iconHtml = "";
         if (p.icon) {
-            var safeDesc = p.desc.replace(/'/g, "\\'");
+            var tooltipText = p.desc;
+            if (p.flavor) {
+                tooltipText += "<br><br><i>" + p.flavor + "</i>";
+            }
+            var safeDesc = tooltipText.replace(/'/g, "\\'");
             iconHtml = `<img src="${p.icon}" class="zoomable-icon" style="width: 32px; height: 32px; margin-right: 5px; border: 1px solid gray;"
                         onmouseenter="window.showTooltip(event, '${safeDesc}')"
                         onmousemove="window.moveTooltip(event)"
@@ -415,11 +427,20 @@ export function updateMicromanagementUI() {
         gameState.employees.forEach(e => {
             var stressColor = e.stress > 80 ? "red" : (e.stress > 50 ? "orange" : "green");
 
+            var actionButtons = `<button class="motivate-btn" data-id="${e.id}" style="font-size: 9px; margin-right: 2px;">Motivate</button>`;
+            actionButtons += `<button class="fire-btn" data-id="${e.id}" style="font-size: 9px; margin-right: 2px;">Fire</button>`;
+
+            if (gameState.jobLevel >= 8) {
+                 actionButtons += `<button class="sacrifice-btn" data-id="${e.id}" style="font-size: 9px; color: red;">Sacrifice</button>`;
+            }
+
             html += `
                 <div class="employee-card">
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <b>${e.name} (${e.role})</b>
-                        <button class="motivate-btn" data-id="${e.id}" style="font-size: 9px;">Motivate</button>
+                        <div style="text-align: right; min-width: 100px;">
+                            ${actionButtons}
+                        </div>
                     </div>
                     <div style="font-size: 10px;">
                         Stress: <span style="color:${stressColor}">${Math.floor(e.stress)}%</span>
@@ -438,13 +459,53 @@ export function updateMicromanagementUI() {
         });
     }
 
+    // Add Hire Button
+    var nextCost = Math.floor(1000 * Math.pow(1.5, gameState.employees.length));
+    html += `
+        <div style="text-align: center; margin-top: 10px;">
+            <button id="hire-btn" class="hire-btn" style="width: 100%;">Hire Employee ($${formatNumber(nextCost)})</button>
+        </div>
+    `;
+
     list.innerHTML = html;
 
-    const btns = list.getElementsByClassName('motivate-btn');
-    for (let btn of btns) {
+    const motivateBtns = list.getElementsByClassName('motivate-btn');
+    for (let btn of motivateBtns) {
         btn.onclick = () => {
             motivateEmployeeLogic(parseInt(btn.getAttribute('data-id')));
             updateMicromanagementUI();
+        };
+    }
+
+    const fireBtns = list.getElementsByClassName('fire-btn');
+    for (let btn of fireBtns) {
+        btn.onclick = () => {
+            var res = fireEmployeeLogic(parseInt(btn.getAttribute('data-id')));
+            if (res.success) logMessage(res.message);
+            updateMicromanagementUI();
+            updateDisplay(); // update cash if refund? (none for fire)
+        };
+    }
+
+    const sacBtns = list.getElementsByClassName('sacrifice-btn');
+    for (let btn of sacBtns) {
+        btn.onclick = () => {
+            var res = sacrificeEmployeeLogic(parseInt(btn.getAttribute('data-id')));
+            if (res.success) logMessage(res.message);
+            updateMicromanagementUI();
+            updateDisplay();
+        };
+    }
+
+    var hireBtn = document.getElementById("hire-btn");
+    if (hireBtn) {
+        hireBtn.disabled = gameState.cash < nextCost;
+        hireBtn.onclick = () => {
+             var res = hireEmployeeLogic();
+             if (res.success) logMessage(res.message);
+             else logMessage(res.message);
+             updateMicromanagementUI();
+             updateDisplay();
         };
     }
 }
@@ -461,6 +522,8 @@ export function updateTheme() {
     if (jobLevel >= 8) {
         body.classList.add("theme-eldritch");
         newTheme = "eldritch";
+        var bgFx = document.getElementById("background-fx");
+        if (bgFx) bgFx.classList.add("bg-neon-fire");
     } else if (jobLevel >= 6) {
         body.classList.add("theme-unsettling");
         newTheme = "unsettling";

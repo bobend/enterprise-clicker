@@ -108,6 +108,62 @@ export function motivateEmployee(id) {
     soundManager.playClick();
 }
 
+export function hireEmployee() {
+    if (!gameState.employees) gameState.employees = [];
+
+    // Cost scales with number of employees
+    var count = gameState.employees.length;
+    var cost = Math.floor(1000 * Math.pow(1.5, count));
+
+    if (gameState.cash >= cost) {
+        gameState.cash -= cost;
+
+        var id = Date.now() + Math.floor(Math.random() * 1000);
+        var roles = ["Intern", "Clerk", "Assistant", "Coordinator", "Analyst"];
+        var names = ["Bob", "Alice", "Dave", "Eve", "Carol", "Mallory", "Trent", "Peggy", "Victor", "Walter"];
+
+        var newEmp = {
+            id: id,
+            name: names[Math.floor(Math.random() * names.length)],
+            role: roles[Math.floor(Math.random() * roles.length)],
+            stress: 0,
+            productivity: 50 + Math.floor(Math.random() * 50)
+        };
+
+        gameState.employees.push(newEmp);
+        return { success: true, message: "Hired " + newEmp.name };
+    } else {
+        return { success: false, message: "Need $" + formatNumber(cost) + " to hire." };
+    }
+}
+
+export function fireEmployee(id) {
+    if (!gameState.employees) return;
+    var idx = gameState.employees.findIndex(x => x.id === id);
+    if (idx !== -1) {
+        var name = gameState.employees[idx].name;
+        gameState.employees.splice(idx, 1);
+        return { success: true, message: "Fired " + name };
+    }
+    return { success: false, message: "Employee not found." };
+}
+
+export function sacrificeEmployee(id) {
+    if (!gameState.employees) return;
+    var idx = gameState.employees.findIndex(x => x.id === id);
+    if (idx !== -1) {
+        var name = gameState.employees[idx].name;
+        // Bonus: Cash based on job level + productivity
+        var bonus = (10000 * gameState.jobLevel) + (gameState.employees[idx].productivity * 100);
+
+        gameState.employees.splice(idx, 1);
+        gameState.cash += bonus;
+
+        return { success: true, message: "Sacrificed " + name + " for $" + formatNumber(bonus) };
+    }
+    return { success: false, message: "Employee not found." };
+}
+
 export function checkSideProjectConsequences(logMessage) {
     var slopProgress = gameState.sideProjects["ai_slop_generator"] || 0;
     var slopGoal = projectList.find(p => p.id === "ai_slop_generator").goal;

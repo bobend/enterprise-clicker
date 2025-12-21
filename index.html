@@ -25,7 +25,7 @@
         <br>
 
         <div class="data-mgmt-bar">
-            <button onclick="toggleSaveMenu()" style="font-size: 10px;">[Data Management]</button>
+            <button onclick="window.toggleSaveMenu()" style="font-size: 10px;">[Data Management]</button>
         </div>
 
         <div id="save-menu" style="display: none; width: 100%; max-width: 800px; background-color: #d3d3d3; border: 2px outset white; padding: 10px; margin-bottom: 10px; box-sizing: border-box;">
@@ -34,12 +34,12 @@
                 <div class="save-col">
                     <b>Export Save:</b><br>
                     <textarea id="export-area" rows="5" style="width: 100%; font-family: monospace;" readonly></textarea>
-                    <button onclick="exportSave()">Generate Export Code</button>
+                    <button onclick="window.exportSave()">Generate Export Code</button>
                 </div>
                 <div class="save-col">
                     <b>Import Save:</b><br>
                     <textarea id="import-area" rows="5" style="width: 100%; font-family: monospace;"></textarea>
-                    <button onclick="importSave()">Import Save Data</button>
+                    <button onclick="window.importSave()">Import Save Data</button>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                             <p>Passive Income: <span id="passive-display">$0.00</span>/sec</p>
                         </div>
                         <br>
-                        <button id="work-btn" onclick="work()">
+                        <button id="work-btn">
                             DO WORK
                         </button>
                         <br><br>
@@ -87,7 +87,7 @@
 
                     <div id="promotion-section">
                          <p>Next Promotion: <span id="next-promotion-cost">???</span></p>
-                         <button id="promote-btn" onclick="promote()" disabled>ASK FOR PROMOTION</button>
+                         <button id="promote-btn" disabled>ASK FOR PROMOTION</button>
                     </div>
                     <hr>
 
@@ -119,7 +119,7 @@
                     <div id="executive-lounge" style="background-color: #000000; color: gold; padding: 5px; border: 2px ridge gold;">
                         <center><b>*** EXECUTIVE LOUNGE ***</b></center>
                         <p>Stock Options: <span id="stock-display">0</span> (Pending: <span id="pending-stock-display">0</span>)</p>
-                        <button id="retire-btn" onclick="ascend()" style="width: 100%; background-color: gold; color: black; font-weight: bold;">RETIRE & ASCEND</button>
+                        <button id="retire-btn" style="width: 100%; background-color: gold; color: black; font-weight: bold;">RETIRE & ASCEND</button>
                         <br><br>
                         <div id="meta-shop-section">
                              <table width="100%" id="meta-shop-table" border="0">
@@ -137,7 +137,7 @@
                     &copy; 1999 The Corporation. All rights reserved. <br>
                     Best viewed with Netscape Navigator 4.0 (or a mobile device).
                     <br>
-                    <button onclick="resetGame()">Reset Career</button>
+                    <button onclick="window.resetGame()">Reset Career</button>
                     <span id="audio-controls-placeholder"></span>
                     <br><br>
                     <a href="https://github.com/bobend/enterprise-clicker" target="_blank">View Source on GitHub</a>
@@ -147,6 +147,6 @@
     </center>
 </div>
 
-<script src="script.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>

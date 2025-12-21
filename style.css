@@ -370,3 +370,29 @@ body.theme-eldritch h2 {
     height: 100%;
     background: blue;
 }
+
+/* Executive Lounge / Meta Shop Styling - High Contrast Override */
+#executive-lounge {
+    /* Ensure high contrast for the container */
+    background-color: #000000 !important;
+    color: #FFD700 !important; /* Gold */
+    border: 2px ridge #FFD700 !important;
+}
+#executive-lounge h1, #executive-lounge h2, #executive-lounge center, #executive-lounge p, #executive-lounge span {
+    color: #FFD700 !important;
+}
+
+/* Meta Shop Item Override */
+.meta-shop-item {
+    border: 1px outset #FFD700 !important;
+    background: #000000 !important;
+    color: #FFD700 !important;
+}
+.meta-shop-item small {
+    color: #FFFFAA !important;
+}
+.meta-shop-item button {
+    background: #FFD700 !important;
+    color: #000000 !important;
+    border-color: #886600 !important;
+}

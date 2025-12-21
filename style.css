@@ -396,3 +396,84 @@ body.theme-eldritch h2 {
     color: #000000 !important;
     border-color: #886600 !important;
 }
+
+/* Eldritch Theme High Contrast Overrides */
+body.theme-eldritch .upgrade-row {
+    background-color: #1a1a1a;
+    border: 1px solid #800000;
+    color: #e0e0e0;
+}
+
+body.theme-eldritch .upgrade-row small {
+    color: #b0b0b0;
+}
+
+body.theme-eldritch .employee-card {
+    background-color: #1a1a1a;
+    border: 1px solid #800000;
+    color: #e0e0e0;
+}
+
+body.theme-eldritch .employee-card span {
+    color: #ffcccc !important; /* Force readable text for stress/prod */
+}
+
+/* Ensure buttons in these sections are readable */
+body.theme-eldritch .upgrade-actions button,
+body.theme-eldritch .motivate-btn,
+body.theme-eldritch .hire-btn,
+body.theme-eldritch .fire-btn,
+body.theme-eldritch .sacrifice-btn {
+    background-color: #400000;
+    color: #ffcccc;
+    border: 1px solid #ff0000;
+}
+
+body.theme-eldritch .upgrade-actions button:disabled,
+body.theme-eldritch .motivate-btn:disabled,
+body.theme-eldritch .hire-btn:disabled {
+    background-color: #200000;
+    color: #800000;
+    border-color: #800000;
+}
+
+/* Neon Fire Effect */
+@keyframes neon-fire {
+    0% {
+        box-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, inset 0 0 10px #ff00de;
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        box-shadow: 0 0 20px #ff00de, 0 0 40px #ff00de, inset 0 0 20px #ff00de;
+        filter: hue-rotate(45deg);
+    }
+    100% {
+        box-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, inset 0 0 10px #ff00de;
+        filter: hue-rotate(0deg);
+    }
+}
+
+.bg-neon-fire {
+    animation: neon-fire 3s infinite alternate;
+    background: radial-gradient(circle, #2b002b 0%, #000000 100%);
+    opacity: 0.8;
+}
+
+/* Sparkle Effect */
+.sparkle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkle-anim 0.5s linear forwards;
+    z-index: 9999;
+    box-shadow: 0 0 5px white, 0 0 10px gold;
+}
+
+@keyframes sparkle-anim {
+    0% { transform: scale(0) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.5) rotate(180deg); opacity: 0.8; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}

@@ -147,7 +147,31 @@ function addCash(amount) {
     }
 }
 
-function work() {
+function work(e) {
+    // Sparkle Effect
+    if (e && e.pageX && e.pageY) {
+        var sparkle = document.createElement("div");
+        sparkle.className = "sparkle";
+        sparkle.style.left = e.pageX + "px";
+        sparkle.style.top = e.pageY + "px";
+
+        // Intensity based on job level
+        var intensity = Math.min(2.0, 0.5 + (gameState.jobLevel * 0.1));
+        sparkle.style.transform = "scale(" + intensity + ")";
+
+        // Random color for higher levels
+        if (gameState.jobLevel >= 6) {
+             var colors = ["#ff00ff", "#00ffff", "#ff0000", "#ffff00"];
+             sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+             sparkle.style.boxShadow = "0 0 10px " + sparkle.style.background;
+        }
+
+        document.body.appendChild(sparkle);
+        setTimeout(function() {
+            if (sparkle.parentNode) sparkle.parentNode.removeChild(sparkle);
+        }, 500);
+    }
+
     var clickPower = jobs[gameState.jobLevel].clickPower;
 
     var parachuteLevel = gameState.metaUpgrades["golden_parachute"] || 0;

@@ -450,7 +450,7 @@ export function updateMicromanagementUI() {
 }
 
 export function updateTheme() {
-    var stocks = gameState.stockOptions;
+    var jobLevel = gameState.jobLevel;
     var body = document.body;
 
     body.classList.remove("theme-unsettling");
@@ -458,10 +458,10 @@ export function updateTheme() {
 
     var newTheme = "normal";
 
-    if (stocks >= 1000) {
+    if (jobLevel >= 8) {
         body.classList.add("theme-eldritch");
         newTheme = "eldritch";
-    } else if (stocks >= 50) {
+    } else if (jobLevel >= 6) {
         body.classList.add("theme-unsettling");
         newTheme = "unsettling";
     }
